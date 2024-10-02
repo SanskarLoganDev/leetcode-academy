@@ -1,5 +1,4 @@
 def isValid(s):
-    flag = False
     bracket_relation = {'(':')','[':']','{':'}'}
     bracket_list = [] # stack
     for bracket in s:
