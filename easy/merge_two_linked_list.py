@@ -15,7 +15,7 @@ class ListNode(object):
         
 class Solution(object):
     def mergeTwoLists(self, list1, list2):
-        head = ListNode() # here this wroks as self.head
+        head = ListNode() # here this wroks as self.head for a new linked list that will hold the resultant linked list
         itr = head        # a pointer for the sorted final array
         while list1 and list2: # here list1 and list2 also serve as pointers inside list1 and list2 respectively
             if list1.val>list2.val:
@@ -30,5 +30,8 @@ class Solution(object):
         else:
             itr.next=list2
         return head.next
+    # Why Not return head directly:
+    # The head node was just a placeholder to simplify the merging process.
+    # The actual merged list starts from head.next.
     
         
