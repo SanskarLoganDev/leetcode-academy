@@ -18,31 +18,33 @@
 
 # Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
 
-# def two_sum(nos, target):
-#     length = len(nos)
-#     for i in range(length):
-#         for j in range(i+1,length):
-#             if nos[i]+nos[j]==target:
-#                 return [i,j] # we could simply return in this way instead of adding another list and appending to it
-#     return "No Match"           
+# Brute force
+
+def two_sum(nos, target):
+    length = len(nos)
+    for i in range(length):
+        for j in range(i+1,length):
+            if nos[i]+nos[j]==target:
+                return [i,j] # we could simply return in this way instead of adding another list and appending to it
+    return "No Match"           
         
-# print(two_sum([3,3],6))
+print(two_sum([3,3],6))
 
 # Optimised (O(n))
 
-# def two_sum_opt(nums, target):
-#     inverse_dict = {}
-#     for i in range(len(nums)):
-#         complement = target - nums[i]
-#         if complement in inverse_dict:
-#             return [inverse_dict[complement],i]
-#         inverse_dict[nums[i]] = i
+def two_sum_opt(nums, target):
+    inverse_dict = {}
+    for i in range(len(nums)):
+        complement = target - nums[i]
+        if complement in inverse_dict:
+            return [inverse_dict[complement],i]
+        inverse_dict[nums[i]] = i
         
-#     return "No Match"           
+    return "No Match"           
         
-# print(two_sum_opt([2, 7, 11, 15],9))
+print(two_sum_opt([2, 7, 11, 15],9))
 
-# Optimised (O(n)) my solu
+# Complexity (O(n)) my solu
 
 def two_sum_opt(nums, target):
     inverse_list = []
