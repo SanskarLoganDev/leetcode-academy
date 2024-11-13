@@ -29,4 +29,17 @@ class Solution(object):
             else: # here else is required to handle cases where duplicates occur more than twice, directly increasing itr to itr.next will skip comparisons
                 head = head.next
         return list1
-        
+
+# Neetcode concept solution, the outer loop iterates using the current pointer and inner loop is used to identify and delete duplicates
+      
+def deleteDuplicates(head):
+        """
+        :type head: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        curr = head
+        while curr:
+            while curr.next and curr.val == curr.next.val: # This loop will continue in case of more than 2 duplicates as well
+                curr.next = curr.next.next
+            curr = curr.next
+        return head
