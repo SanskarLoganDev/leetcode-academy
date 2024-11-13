@@ -26,7 +26,7 @@ class Solution(object):
         while head and head.next:
             if head.val == head.next.val:
                 head.next = head.next.next
-            else: # here else is reauired to handle cases where duplicates occur more than twice, directly increasing itr to itr.next will skip comparisons
+            else: # here else is required to handle cases where duplicates occur more than twice, directly increasing itr to itr.next will skip comparisons
                 head = head.next
         return list1
         
