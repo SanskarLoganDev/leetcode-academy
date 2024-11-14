@@ -42,4 +42,4 @@ def deleteDuplicates(head):
             while curr.next and curr.val == curr.next.val: # This loop will continue in case of more than 2 duplicates as well
                 curr.next = curr.next.next
             curr = curr.next
-        return head
+        return head # since head remains at the start and we iterated curr
