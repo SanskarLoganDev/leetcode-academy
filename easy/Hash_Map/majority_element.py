@@ -59,7 +59,8 @@ def majorityElement(nums):
     res = majority = 0
     
     for n in nums:
-        hash[n] = 1 + hash.get(n, 0)
+        hash[n] = 1 + hash.get(n, 0)   # This method checks if n already exists as a key in hash.
+# If n is found, it returns its current count; if not, it returns 0. Bascially working as a counter
         if hash[n] > majority:
             res = n
             majority = hash[n]
