@@ -14,6 +14,33 @@
 # Input: nums = [2,2,1,1,1,2,2]
 # Output: 2
 
+# Most Efficient Solution
+
+# When count becomes 0:
+# This signals that we have "used up" the confidence we had in the previous candidate.
+# At this point, we choose the current element (num) as the new candidate.
+# Why this works:
+# The intuition is that if there is a majority element, it will eventually remain as the candidate because it appears more than 
+# all other elements combined. It works on the principle mentioned in the question:
+# "The majority element is the element that appears more than ⌊n / 2⌋ times"
+
+def majorityElement(nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        count = 0
+        candidate = None
+        for n in nums:
+            if count == 0:
+                candidate = n
+            if n == candidate:
+                count+=1
+            else:
+                count-=1
+        return candidate
+
+
 # My solu
 
 def majorityElement(nums):
@@ -60,9 +87,19 @@ def majorityElement(nums):
     
     for n in nums:
         hash[n] = 1 + hash.get(n, 0)   # This method checks if n already exists as a key in hash.
-# If n is found, it returns its current count; if not, it returns 0. Bascially working as a counter
+# If n is found, it returns its current count; if not, it returns 0. Basically working as a counter
         if hash[n] > majority:
             res = n
             majority = hash[n]
     
     return res
+
+# Not that efficient solution but short
+from collections import Counter
+def majorityElement(nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        c = Counter(nums)
+        return c.most_common(1)[0][0]
