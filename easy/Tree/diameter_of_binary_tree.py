@@ -37,7 +37,7 @@ class Solution(object):
                 return 0
             left = dfs(node.left) # Length of left path
             right = dfs(node.right) # Length of right path
-            self.res = max(self.res, left+right)
+            self.res = max(self.res, left+right) # This is the diameter
             
             return 1+max(left,right) # add one to get length upto current node
 
