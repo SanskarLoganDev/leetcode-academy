@@ -58,3 +58,14 @@ class Solution(object):
         if root.right:
             elements+=self.inorderTraversal(root.right)
         return elements
+
+
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[int]
+        """
+        if root is None:
+            return []
+        return self.inorderTraversal(root.left) + [root.val] + self.inorderTraversal(root.right)
