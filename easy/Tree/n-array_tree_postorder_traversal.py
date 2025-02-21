@@ -30,7 +30,7 @@ class Solution(object):
         elements = []
         if root is None:
             return []
-        for child in root.children:
+        for child in root.children: # here since children is a list, you have to go one by one for each child in children at that level
             elements+=self.postorder(child)
         elements.append(root.val)
         return elements
