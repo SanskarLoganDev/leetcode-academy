@@ -1,4 +1,4 @@
-# 3318. Find X-Sum of All K-Long Subarrays I
+# 3318. Find X-Sum of All K-Long Subarrays I  (Leetcode medium Important)
 
 # You are given an array nums of n integers and two integers k and x.
 
