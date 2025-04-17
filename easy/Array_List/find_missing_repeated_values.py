@@ -26,7 +26,7 @@
 from typing import List
 
 
-# Brute force solution O(N^4)
+# Brute force solution O(N^4), according to leetcode: O(N^2)
 class Solution:
     def findMissingAndRepeatedValues(self, grid: List[List[int]]) -> List[int]:
         n = len(grid)*len(grid)
@@ -41,7 +41,7 @@ class Solution:
         missing  = set(range(1,n+1))-set(seen)
         return [repeat, missing.pop()]
 
-# Similar solution but usin Set instead of list to store seen values
+# Similar solution but using Set instead of list to store seen values, according to leetcode: O(N*M)
 class Solution:
     def findMissingAndRepeatedValues(self, grid: List[List[int]]) -> List[int]:
         n = len(grid)*len(grid)
