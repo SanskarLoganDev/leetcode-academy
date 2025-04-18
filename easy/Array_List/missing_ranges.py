@@ -43,3 +43,16 @@ class Solution:
         if nums[len(nums)-1]!=upper:
             res.append([nums[len(nums)-1]+1,upper])
         return res
+    
+# More efficient handling of edge cases
+
+class Solution:
+    def findMissingRanges(self, nums: List[int], lower: int, upper: int) -> List[List[int]]:
+        # prepend a “left” sentinel and append a “right” sentinel
+        extended = [lower - 1] + nums + [upper + 1]
+        res = []
+        for i in range(len(extended) - 1):
+            lo, hi = extended[i] + 1, extended[i + 1] - 1
+            if lo <= hi:
+                res.append([lo, hi])
+        return res
