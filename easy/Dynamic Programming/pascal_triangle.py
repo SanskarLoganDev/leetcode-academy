@@ -14,6 +14,7 @@
 # Output: [[1]]
 from typing import List
 
+# Time complexity O(N^2)
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:
         dp=[]
