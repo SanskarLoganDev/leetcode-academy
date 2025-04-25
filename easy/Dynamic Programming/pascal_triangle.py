@@ -27,4 +27,3 @@ class Solution:
                 row[j] = dp[i-1][j-1]+dp[i-1][j]
             dp.append(row)
         return dp
-    
