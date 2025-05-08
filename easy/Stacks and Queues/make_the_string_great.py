@@ -45,4 +45,3 @@ def makeGood(s):
             
     return ''.join(dq)
 print(makeGood("leEeetcode"))
-    
