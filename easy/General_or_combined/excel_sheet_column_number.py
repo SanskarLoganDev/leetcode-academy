@@ -35,6 +35,7 @@
 class Solution:
     def titleToNumber(self, columnTitle: str) -> int:
         val = 0
-        for char in columnTitle:
-            val = val*26+ord(char)-64
+        for char in columnTitle: # here 65 is the ASCII value of 'A'
+            # ord(char) gives the ASCII value of char, and we subtract 65 to convert 'A' to 0, 'B' to 1, ..., 'Z' to 25`
+            val = val*26+(ord(char)-65)+1 # here +1 is used to convert 0-25 to 1-26
         return val
