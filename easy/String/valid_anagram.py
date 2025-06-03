@@ -21,13 +21,13 @@
 def validAnagram(s,t):
     if len(s)!=len(t):
             return False
-    s=''.join(sorted(s))
+    s=''.join(sorted(s)) # sorted has the time complexity of O(NlogN)
     t=''.join(sorted(t))
     return s==t
 
 print(validAnagram("anagram", "nagaram"))
 
-# Alternate Way (Optimised):
+# Alternate Way (Optimised) O(N+M) where N is the length of s and M is the length of t:
 
 def isAnagram(s, t):
     return all(s.count(x) == t.count(x) for x in 'abcdefghijklmnopqrstuvwxyz')
