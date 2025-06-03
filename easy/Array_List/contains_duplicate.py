@@ -1,8 +1,6 @@
-# 217. CONTAINS DUPLICATE
+# 217. CONTAINS DUPLICATE (Neetcode 150)
 
 # Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
-
- 
 
 # Example 1:
 
@@ -57,4 +55,12 @@ def containsDuplicate3(nums):
 
 print(containsDuplicate3([1,2,3,4]))
 
+# Neetcode method
 
+def containsDuplicate4(nums):
+    num_set = set()
+    for num in nums:
+        if num in num_set:
+            return True
+        num_set.add(num)
+    return False
