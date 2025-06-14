@@ -26,6 +26,8 @@
 from typing import List
 
 # time complexity O(n), space complexity O(n)
+# the following solution uses prefix and postfix arrays to store the products of elements before and after each index
+# which allows us to compute the product of all elements except the current one without using division.
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         prefix = []
@@ -44,9 +46,23 @@ class Solution:
             pre = i-1
             post = i+1
             if pre<0:
-                output.append(1*postfix[post])
+                output.append(1*postfix[post]) # if the current index is the first element, we only take the postfix product
             elif post>=len(nums):
-                output.append(1*prefix[pre])
+                output.append(1*prefix[pre]) # if the current index is the last element, we only take the prefix product
             else:
-                output.append(prefix[pre]*postfix[post])
+                output.append(prefix[pre]*postfix[post]) # otherwise, we multiply the prefix and postfix products
+        return output
+
+# time complexity O(n), space complexity O(1) solution
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        pre, post = 1, 1
+        output = [1]*len(nums)
+        for i in range(len(nums)): # calculate prefix products (different than the previous solution, as in the first element we don't need to multiply by 1, its value is already 1, the multiplication is done in the next loop)
+            output[i] = pre
+            pre*=nums[i]
+        for i in range(len(nums)-1,-1,-1):
+            output[i]*=post
+            post*=nums[i]
         return output
