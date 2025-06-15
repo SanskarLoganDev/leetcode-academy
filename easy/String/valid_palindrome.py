@@ -1,4 +1,4 @@
-# 125. Valid Palindrome
+# 125. Valid Palindrome (Neetcde 150)
 
 # A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
 
@@ -21,6 +21,8 @@
 # Explanation: s is an empty string "" after removing non-alphanumeric characters.
 # Since an empty string reads the same forward and backward, it is a palindrome.
 
+# Time Complexity: O(n), space complexity: O(n)
+# Solution 1: Using string manipulation
 def isPalindrome(s):
     if not s:
         return False
@@ -32,7 +34,7 @@ def isPalindrome(s):
     return str1==str1[::-1]
 print(isPalindrome("0P"))
 
-# Optimised solu using 2 pointer method
+# Optimised solu using 2 pointer method. time complexity: O(n), space complexity: O(1)
 
 def isPalindrome(s):
         """
@@ -53,4 +55,10 @@ def isPalindrome(s):
                 return False
 
         return True
+
+# if the interviewer asks us not  to use the isalnum() method, we can use the following code to check if a character is alphanumeric
+def is_alphanumeric(c):
+    return (ord('a') <= ord(c) <= ord('z') or
+            ord('A') <= ord(c) <= ord('Z') or
+            ord('0') <= ord(c) <= ord('9'))
  
