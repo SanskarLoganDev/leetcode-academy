@@ -25,6 +25,8 @@
 # 2 <= n <= 105
 # 0 <= height[i] <= 104
 
+# Time Complexity: O(n)
+# Space Complexity: O(1)
 from typing import List
 class Solution:
     def maxArea(self, height: List[int]) -> int:
