@@ -69,3 +69,25 @@ class Solution:
 # Two Pointers Approach
 # Time Complexity: O(n) - We traverse the height array once to calculate the trapped water.
 # Space Complexity: O(1) - We use two pointers to keep track of the left and right walls, so we don't need any additional space.
+
+# Explanation:# We use two pointers, one starting from the left and one from the right.
+# We keep track of the maximum height seen so far from both sides.
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        l,r = 0, n-1
+        left_max, right_max = height[l], height[r]
+        res = 0
+        while l<r:
+            if left_max<right_max:
+                l+=1
+                left_max = max(left_max, height[l])
+                if left_max - height[l]>0:
+                    res+= left_max - height[l]
+            else:
+                r-=1
+                right_max = max(right_max, height[r])
+                if right_max - height[r]>0:
+                    res+= right_max - height[r]
+        return res
