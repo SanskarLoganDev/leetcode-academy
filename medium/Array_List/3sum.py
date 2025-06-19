@@ -30,6 +30,9 @@
 # 3 <= nums.length <= 3000
 # -105 <= nums[i] <= 105
 
+# # Time Complexity: O(n^2)  (O(n log n) for sorting + O(n^2) for the two-pointer approach)
+# # Space Complexity: O(1)
+
 from typing import List
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
