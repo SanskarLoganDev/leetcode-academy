@@ -1,4 +1,5 @@
-# 121. Best Time to Buy and Sell Stock
+# 121. Best Time to Buy and Sell Stock (Neetcode 150) Important
+# Topics: Array, Dynamic Programming
 
 # You are given an array prices where prices[i] is the price of a given stock on the ith day.
 
