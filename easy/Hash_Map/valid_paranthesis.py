@@ -1,4 +1,4 @@
-# 20. VALID PARENTHESIS
+# 20. VALID PARENTHESIS (NeetCode 150) Important
 
 # Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 
@@ -26,3 +26,18 @@ def isValid(s):
         return False
 
 print(isValid("()}[]"))
+
+# Shorter simpler solution with same complexities
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        parent = {'}':'{',']':'[',')':'('}
+        stack = []
+        for i in range(len(s)):
+            if s[i] in parent.values():
+                stack.append(s[i])
+            elif len(stack)!=0 and s[i] in parent and stack[-1]==parent[s[i]]:
+                stack.pop()
+            else:
+                return False
+        return len(stack)==0
