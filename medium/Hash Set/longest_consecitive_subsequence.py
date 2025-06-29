@@ -1,14 +1,9 @@
 # 128. Longest Consecutive Sequence
-# Solved
-# Medium
-# Topics
-# conpanies icon
-# Companies
+
 # Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
 
 # You must write an algorithm that runs in O(n) time.
 
- 
 
 # Example 1:
 
@@ -32,7 +27,7 @@
 
 from typing import List
 
-# Solution 1: Using Sorting, time complexity O(n log n)
+# Solution 1: Using Sorting, time complexity O(n log n), space complexity O(n)
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         if len(nums)==0:
@@ -51,7 +46,7 @@ class Solution:
         return max_count
 
 
-# Solution 2: Using Hash Set, time complexity O(n)
+# Solution 2: Using Hash Set, time complexity O(n), space complexity O(n)
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         if len(nums)==0:
