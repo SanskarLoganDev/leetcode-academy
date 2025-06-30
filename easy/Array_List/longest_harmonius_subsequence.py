@@ -60,4 +60,16 @@ class Solution:
                 max_len = max(max_len, r - l + 1)
 
         return max_len
+
+# Time Complexity: O(n), Space Complexity: O(n)
+from collections import Counter    
+class Solution:
+    def findLHS(self, nums: List[int]) -> int:
+        max_len = 0
+        count = Counter(nums)
+        for i in range(len(nums)):
+            if nums[i]+1 in count:
+                max_len = max(max_len, count.get(nums[i],0)+count.get(nums[i]+1,0))
+
+        return max_len
             
