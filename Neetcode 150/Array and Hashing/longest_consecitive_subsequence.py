@@ -61,3 +61,20 @@ class Solution:
                 count+=1
             max_len = max(max_len, count)
         return max_len
+
+# Same complexity but better readability and understanding 
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        if len(nums)==0:
+            return 0
+        nums = set(nums)
+        res = []
+        max_len = 1 # Initialize to 1 to handle cases with single element sequences
+        for n in nums:
+            if n+1 in nums:
+                length = 1
+                while n+1 in nums: # Check if the next number is in the set
+                    length+=1
+                    n=n+1 # Increment n to continue checking the next number
+                max_len = max(max_len, length)
+        return max_len
