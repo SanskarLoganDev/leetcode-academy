@@ -84,7 +84,84 @@ class Solution:
 # square_index = (r // 3) * 3   +   (c // 3)
 #              = block_row * 3  +   block_col
 # You only multiply the block_row by 3 because you need to “skip over” that many whole rows of blocks. The block_col just offsets you within that row of blocks, so you add it directly—no extra factor of 3.
+
+# Time complexities for all solutions are going to be constant O(1) since the board is always 9x9, which means we are always iterating through 81 cells.
+
+
+# Brute Force Solution
+class Solution:
     
+    # Helper function to validate a 3x3 box
+    def isValidBox(self, grid, sr, er, sc, ec):
+        box_set = set()
+        for row in range(sr, er+1):
+            for col in range(sc, ec+1):
+                if grid[row][col]=='.':
+                    continue
+                if grid[row][col] in box_set:
+                    return False
+                box_set.add(grid[row][col])
+        return True
+
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        # valididate rows
+
+        for row in range(9):
+            row_set = set()
+            for col in range(9):
+                if board[row][col]=='.':
+                    continue
+                if board[row][col] in row_set:
+                    return False
+                row_set.add(board[row][col])
+
+        # validate columns
+
+        for col in range(9):
+            col_set = set()
+            for row in range(9):
+                if board[row][col]=='.':
+                    continue
+                if board[row][col] in col_set:
+                    return False
+                col_set.add(board[row][col])
+
+        # validate boxes
+        # sr = start row, er = end row, sc = start column, ec = end column
+        # here we have +3 as the next start row is going to be 3 rows down and next start column is going to be 3 columns right.
+        for sr in range(0,9,3):
+            er = sr+2
+            for sc in range(0,9,3):
+                ec = sc+2
+                if self.isValidBox(board, sr, er, sc, ec)!=True:
+                    return False
+
+        return True
+
+# Smarter solution using just 1 set
+class Solution:
+
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        string_set = set()
+
+        for row in range(9):
+            for col in range(9):
+                if board[row][col]=='.':
+                    continue
+                
+                # The following strings are constructed to check for duplicates in rows, columns, and boxes.
+                string_row = f"{board[row][col]} found in row {row}"
+                string_col = f"{board[row][col]} found in column {col}"
+                string_box = f"{board[row][col]} found in box {row//3},{col//3}"
+
+                if string_row in string_set or string_col in string_set or string_box in string_set:
+                    return False
+                string_set.add(string_row)
+                string_set.add(string_col)
+                string_set.add(string_box)
+
+        return True
+
 class Solution(object):
     def isValidSudoku(self, board):
         """
