@@ -32,7 +32,8 @@ class Solution:
                     max_profit = val
         return max_profit
         
-# Optimised solution
+# Optimised solution, time O(N), space O(1) using sliding window technique
+# We can keep track of the minimum price seen so far and calculate the profit at each step
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         max_profit = 0
