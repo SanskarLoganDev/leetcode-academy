@@ -67,9 +67,9 @@ class Solution:
         i=j=count=0
         n = len(nums1)
         m = len(nums2)
-        idx1 = (n+m)//2
+        idx1 = (n+m)//2 # if (n+m) is even, idx1 is the middle index, if odd, it is the index of the first middle element
         idx2 = idx1 - 1
-        e1 = e2 = 0
+        e1 = e2 = 0 # elements at idx1 and idx2 respectively
         while i<n and j<m:
             if nums1[i]<nums2[j]:
                 if count == idx2:
@@ -103,5 +103,46 @@ class Solution:
             return (e1+e2)/2
         else:
             return e1
+        
+        
+# time complexity: O(log(min(n,m))), space complexity: O(1)
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1)>len(nums2):
+            return self.findMedianSortedArrays(nums2,nums1) # ensure nums1 is the smaller array
+        m = len(nums1) # the smaller one
+        n = len(nums2)
+
+        l = 0
+        r = m
+
+        while l<=r:
+            # px and py are for left partition of nums1 and nums2 respectively
+            px = (l+r)//2 # partition index for nums1
+            py = (m+n+1)//2 - px # partition index for nums2
+
+            # left half
+            x1 = nums1[px-1] if px>0 else float("-inf") # here px-1 is the last element of left partition of nums1 and we use -inf if px is 0
+            x2 = nums2[py-1] if py>0 else float("-inf") # here py-1 is the last element of left partition of nums2 and we use -inf if py is 0
+
+            # right half
+            x3 = nums1[px] if px<m else float("inf") # here px is the first element of right partition of nums1 and we use inf if px is m
+            x4 = nums2[py] if py<n else float("inf") # here py is the first element of right partition of nums2 and we use inf if py is n
+
+            if (x1<=x4 and x2<=x3):
+                if (m+n)%2==1:
+                    return max(x1, x2)
+                else:
+                    return (max(x1,x2)+min(x3,x4))/2
+
+            elif (x1>x4):
+                r = px-1
+            else:
+                l = px+1
+
+        return -1
+
+
+
         
         
