@@ -1,4 +1,4 @@
-# 141. LINKED LIST CYCLE
+# 141. LINKED LIST CYCLE Neetcode 150 (Important)
 
 # Given head, the head of a linked list, determine if the linked list has a cycle in it.
 
@@ -6,16 +6,13 @@
 
 # Return true if there is a cycle in the linked list. Otherwise, return false.
 
- 
-
 # Example 1:
-
 
 # Input: head = [3,2,0,-4], pos = 1
 # Output: true
 # Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
-# Example 2:
 
+# Example 2:
 
 # Input: head = [1,2], pos = 0
 # Output: true
@@ -45,7 +42,7 @@ class Solution(object):
         while head:
             if head in set1:
                 return True
-            set1.add(head)
+            set1.add(head) # add the head to set instead of just head.val
             head=head.next
         return False
     
@@ -62,8 +59,8 @@ class Solution(object):
         fast = head
         slow = head
 
-        while fast and fast.next:
-            slow = slow.next
+        while fast and fast.next: # fast pointer moves two steps, slow pointer moves one step, we check both fast and fast.next to avoid NoneType errors as fast.next can be None
+            slow = slow.next # we put slow.next and fast.next.next before checking for equality as initally both slow and fast point to the same node
             fast = fast.next.next
             if slow == fast:
                 return True
