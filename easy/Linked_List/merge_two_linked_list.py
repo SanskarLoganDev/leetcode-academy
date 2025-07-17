@@ -1,4 +1,4 @@
-# MERGE TWO SORTED LISTS
+# 21. MERGE TWO SORTED LISTS Neetcode 150 (Important)
 
 # You are given the heads of two sorted linked lists list1 and list2.
 
@@ -24,7 +24,7 @@ class Solution(object):
             else:
                 itr.next=list1
                 list1=list1.next
-            itr = itr.next
+            itr = itr.next  # moving the current pointer ahead in the new linked list
         if list1:          # dealing with any remaining elements in list1, happens when list1 is longer than list2
             itr.next=list1
         else:
