@@ -1,4 +1,4 @@
-# 206. REVERSE LINKED LIST
+# 206. REVERSE LINKED LIST Neetcode 150 (Important)
 
 # Given the head of a singly linked list, reverse the list, and return the reversed list.
 
@@ -36,5 +36,5 @@ class Solution(object):
             curr.next = prev # connecting the current node to previous node
             prev = curr # moving previous ahead
             curr = next_node # moving current ahead
-        return prev
+        return prev # here we return the previous node which is the new head of the reversed linked list
          
