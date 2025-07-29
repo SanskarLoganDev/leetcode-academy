@@ -47,7 +47,47 @@ class Solution(object):
             curr = curr.next
         l2 = l1[::-1]
         return l1==l2
-    
+
+# solution using finding middle and reversing the second half
+# Time complexity: O(n)
+# Space complexity: O(1)
+
+from typing import Optional
+class Solution:
+    def reverseLinkedList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr =  head
+        while curr:
+            curr_next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = curr_next
+        return prev
+
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        slow = head
+        fast = head
+        # finding middle (slow)
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+        # if fast is not None, it means the length of the linked list is odd
+        if fast!=None:
+            slow = slow.next
+        
+        tail = self.reverseLinkedList(slow)
+        start = head
+        # Comparing values of 2 halves of string
+        # start is the head and tail is the reversed second half
+        while start and tail:
+            if start.val!=tail.val:
+                return False
+            start = start.next
+            tail = tail.next
+        return True
+        
+
 # Solution using Tortoise and Hare algorithm
 
 class Solution(object):
