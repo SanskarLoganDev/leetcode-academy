@@ -32,6 +32,50 @@
 # 1 <= Length of the list <= 1000.
 # 1 <= Node.val <= 1000
 
+from typing import Optional        
+
+# time complexity: O(n)
+# space complexity: O(1)
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+class Solution:
+    def reverse(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        curr = head
+        prev = None
+        while curr:
+            curr_next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = curr_next
+        return prev
+
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        # finding mid
+        fast = head
+        slow = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        rev = self.reverse(slow)
+        curr = head
+        # below we are merging the two lists
+        # first half is curr and second half is rev
+        while rev and rev.next:
+            curr_next = curr.next
+            rev_next = rev.next
+            curr.next = rev
+            rev.next = curr_next
+            curr = curr_next
+            rev = rev_next
+
 # implmenting the solution if it was a list instead of a linked list
 class Solution:
     def reorderList(self, l1) -> None:
@@ -52,4 +96,8 @@ head = [2,4,6,8,10]
 l1 = sol.reorderList(head)
 print(l1)  # Output: [2, 8, 4, 6]
         
+
+
+        
+
         
