@@ -69,14 +69,8 @@ class Solution:
         return oldToCopy[head]
     
     
-"""
-# Definition for a Node.
-class Node:
-    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
-        self.val = int(x)
-        self.next = next
-        self.random = random
-"""
+# Time complexity: O(n)
+# Space complexity: O(n)/O(1) debatable as we are not using any extra space for the mapping in the second solution, but we are still creating new nodes, so Space complexity is O(1) but extra space would be O(n) if we consider the new nodes created.
 
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
