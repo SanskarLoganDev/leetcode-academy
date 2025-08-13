@@ -34,7 +34,8 @@ class Solution:
         if n==1:
             return True
         return False
-    
+
+# time complexity: O(1)
 import math
 class Solution:
     def isPowerOfThree(self, n: int) -> bool:
