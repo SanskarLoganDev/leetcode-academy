@@ -68,6 +68,9 @@ class LRUCache:
         self.cache.append((key, value))  
 
 
+# time complexity: O(1) for get and put
+# space complexity: O(n), where n is the capacity of the cache
+
 class Node:
      def __init__(self, key, val):
         self.key = key
@@ -85,13 +88,13 @@ class LRUCache:
         self.left.next, self.right.prev = self.right, self.left # here we are creating a doubly linked list with left and right dummy nodes
     
     # remove from linked list
-    def remove(self, node):
+    def remove(self, node): # O(1) since it is a doubly linked list
         nxt = node.next
         prev = node.prev
         prev.next, nxt.prev = nxt, prev # here nxt and prev are the next and previous nodes of the node to be removed
 
     # add to the linked list from the right
-    def insert(self, node):
+    def insert(self, node): # O(1) since it is a doubly linked list
         nxt = self.right
         prev = self.right.prev
         prev.next = nxt.prev = node
@@ -99,7 +102,7 @@ class LRUCache:
         node.next = nxt
         
 
-    def get(self, key: int) -> int:
+    def get(self, key: int) -> int: # O(1) since we are using a hashmap to store the nodes
         if key in self.cache:
             self.remove(self.cache[key]) # remove from the linked list
             # insert the node to the right end of the linked list
@@ -107,7 +110,7 @@ class LRUCache:
             return self.cache[key].val
         return -1
 
-    def put(self, key: int, value: int) -> None:
+    def put(self, key: int, value: int) -> None: # O(1) since we are using a hashmap to store the nodes
         if key in self.cache:
             self.remove(self.cache[key])
         self.cache[key] = Node(key, value)
