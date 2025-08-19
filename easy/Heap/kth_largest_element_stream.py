@@ -45,27 +45,27 @@
 
 from typing import List
 
-# Using sorting O(NlogN)
+# Time omplexity: O(NlogN) since we are using sorting
+# Space complexity: O(N) for storing the elements in the list
+import heapq
 class KthLargest:
 
     def __init__(self, k: int, nums: List[int]):
-        self.nums = nums
+        self.nums = nums # extra space to store the elements
         self.k = k
-        self.res = ["null"]
-        
 
     def add(self, val: int) -> int:
-        self.nums.append(val)     
+        self.nums.append(val)
         self.nums.sort(reverse=True)
-        res = self.nums[self.k-1]
-        return res
-
+        return self.nums[self.k-1]
 
 # Your KthLargest object will be instantiated and called as such:
 # obj = KthLargest(k, nums)
 # param_1 = obj.add(val)
 
 # Implementation using heap: With a min‐heap of fixed size k, each add call takes O(log k) time
+# time complexity: O(log k) for each add operation
+# space complexity: O(k) for the heap
 
 import heapq
 from typing import List
@@ -88,8 +88,8 @@ class KthLargest:
         elif val > self.heap[0]:
             # heapreplace removes the smallest element and adds the new one.
             heapq.heapreplace(self.heap, val)
-        # After the operation, the smallest element in the heap (heap[0])
-        # is the kth largest element overall.
+        # After the operation, the smallest element in the heap (heap[0] is the kth largest element overall.
+        # time complexity of heapreplace is O(log k)
         return self.heap[0]
 
 # Example usage:
