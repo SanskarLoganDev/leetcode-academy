@@ -65,6 +65,7 @@ class Solution:
 
         while True:
             # Find the k-th node ahead (or stop if fewer than k remain)
+            # this is just to check if we have enough nodes to reverse
             kth = group_prev
             for _ in range(k):
                 kth = kth.next
