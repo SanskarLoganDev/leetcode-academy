@@ -1,4 +1,5 @@
 # 1046. Last Stone Weight
+# Neetcode 150 (Important)
 
 # You are given an array of integers stones where stones[i] is the weight of the ith stone.
 
@@ -25,12 +26,14 @@
 # Input: stones = [1]
 # Output: 1
 
+# time complexity: O(NlogN) since we are using a heap to keep track of the largest stones
+
 from typing import List
 import heapq
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
         max_heap = [-x for x in stones]
-        heapq.heapify(max_heap)
+        heapq.heapify(max_heap) # heapify is O(N) operation to create a heap from the list
         while True:
             if not max_heap:
                 return 0
@@ -42,4 +45,4 @@ class Solution:
                 continue
             elif x!=y:
                 new = -(y-x)
-                heapq.heappush(max_heap, new)
+                heapq.heappush(max_heap, new) # heappush is O(log N) operation
