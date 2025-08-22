@@ -26,7 +26,19 @@ class Solution:
         return nums[k-1]
 
 
-# Using heap O(NlogK)
+# Time complexity — O(n log k)
+
+# Up to k times we do heappush on a heap of size ≤ k ⇒ each O(log k) ⇒ O(k log k).
+# For the remaining n − k elements:
+# Compare with heap[0] ⇒ O(1).
+# If larger, heapreplace (pop then push) ⇒ O(log k).
+# Worst case, this happens for each of the n − k elements ⇒ O((n − k) log k).
+
+# Total worst-case: O(k log k + (n − k) log k) = O(n log k).
+# Space complexity — O(k)
+
+# The heap stores at most k elements. No other auxiliary structures grow with n.
+
 import heapq
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
@@ -37,3 +49,14 @@ class Solution:
             elif nums[i]>heap[0]:
                 heapq.heapreplace(heap, nums[i])
         return heap[0]
+
+# time complexity: O(N + Klog(N))    
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        max_heap = [-x for x in nums] # O(N) to create a max heap
+        heapq.heapify(max_heap)
+        while k>1:
+            heapq.heappop(max_heap) # O(log N) operation to pop the smallest element, done k times
+            k-=1
+        return -max_heap[0]
+        
