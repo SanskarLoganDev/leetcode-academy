@@ -1,4 +1,5 @@
 # 215. Kth Largest Element in an Array
+# Neetcode 150 (Important)
 
 # Given an integer array nums and an integer k, return the kth largest element in the array.
 
@@ -45,16 +46,16 @@ class Solution:
         heap = []
         for i in range(len(nums)):
             if len(heap)<k:
-                heapq.heappush(heap, nums[i])
+                heapq.heappush(heap, nums[i]) # heappush takes O(log k) time
             elif nums[i]>heap[0]:
-                heapq.heapreplace(heap, nums[i])
+                heapq.heapreplace(heap, nums[i]) # heapreplace takes O(log k) time
         return heap[0]
 
 # time complexity: O(N + Klog(N))    
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
         max_heap = [-x for x in nums] # O(N) to create a max heap
-        heapq.heapify(max_heap)
+        heapq.heapify(max_heap) # heapify takes O(N) time
         while k>1:
             heapq.heappop(max_heap) # O(log N) operation to pop the smallest element, done k times
             k-=1
