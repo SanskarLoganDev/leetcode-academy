@@ -50,7 +50,7 @@ class MedianFinder:
     def addNum(self, num: int) -> None:
         self.nums.append(num)
 
-    def findMedian(self) -> float:
+    def findMedian(self) -> float: # time complexity O(NlogN)
         self.nums.sort()
         if len(self.nums)%2!=0:
             return self.nums[len(self.nums)//2]
@@ -77,7 +77,7 @@ class MedianFinder:
         self.max_left_heap = []
         self.min_right_heap = []
 
-    def addNum(self, num: int) -> None:
+    def addNum(self, num: int) -> None: # time complexity O(log n)
         if not self.max_left_heap:
             self.max_left_heap.append(-num)
             return
@@ -92,7 +92,7 @@ class MedianFinder:
                 popped = -heapq.heappop(self.max_left_heap)
                 heapq.heappush(self.min_right_heap, popped) 
 
-    def findMedian(self) -> float:
+    def findMedian(self) -> float: # time complexity O(1)
         if len(self.max_left_heap)>len(self.min_right_heap):
             return -self.max_left_heap[0]
         else:
