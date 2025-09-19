@@ -15,11 +15,13 @@
 # Output: 2
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+
+class TreeNode(object):
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+        
 class Solution(object):
     def maxDepth(self, root):
         """
@@ -34,4 +36,46 @@ class Solution(object):
 
             return 1+max(left,right)
         return dfs(root)
+    
+# same as above but one liner
+from typing import Optional
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        return 1+max(self.maxDepth(root.left), self.maxDepth(root.right))
+    
+# using bfs
+
+
+from collections import deque
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        q = deque([root])
+        level = 0
+        while q:
+            for _ in range(len(q)):
+                node = q.popleft()
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            level+=1
+        return level
+
+# using iterative dfs
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        stack = [[root, 1]]
+        res = 0
+        while stack:
+            node, depth = stack.pop()
+            if node:
+                res = max(res, depth)
+                stack.append([node.left, depth+1])
+                stack.append([node.right, depth+1])
+
+        return res
         
