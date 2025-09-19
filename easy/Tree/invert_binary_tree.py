@@ -51,7 +51,13 @@ class Solution(object):
         return root
     
 # Let's use Example 1:
+# Input Tree (before inversion):
 
+#        4
+#       / \
+#      2   7
+#     / \ / \
+#    1  3 6  9
 # Understanding using stack diagram
 
 # invert(4)
