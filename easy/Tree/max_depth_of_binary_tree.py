@@ -36,7 +36,56 @@ class Solution(object):
 
             return 1+max(left,right)
         return dfs(root)
-    
+
+# Example explanation:
+
+#             1
+#          /     \
+#         2       3
+#        / \       \
+#       4   5       6
+#          / \     / \
+#         7   8   9  10
+#              \
+#              11
+
+# dfs(1)
+#   dfs(2)
+#     dfs(4)
+#       dfs(None) -> 0
+#       dfs(None) -> 0
+#       return 1 + max(0, 0) = 1          # depth at node 4
+#     dfs(5)
+#       dfs(7)
+#         dfs(None) -> 0
+#         dfs(None) -> 0
+#         return 1 + max(0, 0) = 1        # depth at node 7
+#       dfs(8)
+#         dfs(None) -> 0
+#         dfs(11)
+#           dfs(None) -> 0
+#           dfs(None) -> 0
+#           return 1 + max(0, 0) = 1      # depth at node 11
+#         return 1 + max(0, 1) = 2        # depth at node 8
+#       return 1 + max(1, 2) = 3          # depth at node 5 (via 5→8→11)
+#     return 1 + max(1, 3) = 4            # depth at node 2 (via 2→5→8→11)
+
+#   dfs(3)
+#     dfs(None) -> 0
+#     dfs(6)
+#       dfs(9)
+#         dfs(None) -> 0
+#         dfs(None) -> 0
+#         return 1 + max(0, 0) = 1        # depth at node 9
+#       dfs(10)
+#         dfs(None) -> 0
+#         dfs(None) -> 0
+#         return 1 + max(0, 0) = 1        # depth at node 10
+#       return 1 + max(1, 1) = 2          # depth at node 6
+#     return 1 + max(0, 2) = 3            # depth at node 3 (via 3→6→9/10)
+
+# return 1 + max(4, 3) = 5                # depth at node 1 (overall answer)
+
 # same as above but one liner
 from typing import Optional
 class Solution:
