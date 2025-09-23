@@ -26,7 +26,8 @@ class TreeNode:
         self.val = val
         self.left = left
         self.right = right
-        
+
+# time complexity: O(N) where N is the number of nodes in the tree        
 from typing import Optional        
 class Solution:
 
