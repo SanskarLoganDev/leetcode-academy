@@ -27,7 +27,7 @@ class TreeNode(object):
         self.left = left
         self.right = right
         
-        
+# time complexity: O(N) where N is the number of nodes in the tree        
 class Solution(object):
     def isSameTree(self, p, q):
         """
