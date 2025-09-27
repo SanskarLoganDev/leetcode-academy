@@ -1,4 +1,5 @@
 # 199. Binary Tree Right Side View
+
 # Neetcode 150 (Important)
 
 # Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
@@ -34,7 +35,9 @@ class TreeNode:
         
 from typing import List, Optional
 from collections import deque
+
 # Used BFS to solve this problem
+
 # time complexity: O(N) where N is the number of nodes in the tree
 # space complexity: O(W) where W is the maximum width of the tree
 
