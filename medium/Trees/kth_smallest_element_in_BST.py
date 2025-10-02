@@ -52,3 +52,24 @@ class Solution:
         for _ in range(k-1): # O(k) for k iterations
             heapq.heappop(res) # O(log n) operation for heap pop
         return heapq.heappop(res)
+    
+# In order traversal of BST gives sorted order of elements
+
+# time complexity: O(N) where N is the number of nodes in the tree
+# space complexity: O(N)
+
+import heapq
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        def dfs(node):
+            elements = []
+
+            if node.left:
+                elements+=dfs(node.left)
+            elements.append(node.val)
+            if node.right:
+                elements+=dfs(node.right)
+            return elements
+        return dfs(root)[k-1]
+
+
