@@ -1,3 +1,6 @@
+# 66. Plus One
+# Neetcode 150 (Important)
+
 # You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. 
 # The digits are ordered from most significant to least significant in left-to-right order. 
 # The large integer does not contain any leading 0's.
@@ -26,8 +29,24 @@
 # Incrementing by one gives 9 + 1 = 10.
 # Thus, the result should be [1,0].
  
+ 
+# optimised solu: time complexity is O(N), space complexity (memory) is better O(1)
 
+def plusOne(digits):
+    l = len(digits)
+    for i in range(l-1, -1, -1): # the stop index is -1 because stop part does not include the number in it, so stop = 0 would stop
+    # the loop at i = 1 and not go till 0 that's why we used -1. Here -1 is not to be confused with -1 the last element
+        if digits[i]!=9:
+            digits[i]+=1
+            return digits
+        else:
+            digits[i]=0
+    return [1]+ digits # will only reach here if all the digits are 9 and therefore 1 needs to be added to the front of the list
 
+print(plusOne([9,9,9,9]))
+
+# time complexity: O(N) where N is the number of digits in the number
+# space complexity: O(N) where N is the number of digits in the number
 def plusOne(digits):
     l = len(digits)
     if digits[l-1] != 9:
@@ -43,17 +62,3 @@ def plusOne(digits):
 
 print(plusOne([1,2,9,9]))  
 
-# optimised solu: time complexity is same, space complexity (memory) is better
-
-def plusOne(digits):
-    l = len(digits)
-    for i in range(l-1, -1, -1): # the stop index is -1 because stop part does not include the number in it, so stop = 0 would stop
-    # the loop at i = 1 and not go till 0 that's why we used -1. Here -1 is not to be confused with -1 the last element
-        if digits[i]!=9:
-            digits[i]+=1
-            return digits
-        else:
-            digits[i]=0
-    return [1]+ digits # will only reach here if all the digits are 9 and therefore 1 needs to be added to the front of the list
-
-print(plusOne([9,9,9,9]))
