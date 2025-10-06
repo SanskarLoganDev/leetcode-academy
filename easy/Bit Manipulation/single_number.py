@@ -1,10 +1,9 @@
-# 136) SINGLE NUMBER
+# 136) Single Number
+# Neetcode 150 (Important)
 
 # Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
 
 # You must implement a solution with a linear runtime complexity and use only constant extra space.
-
- 
 
 # Example 1:
 
@@ -20,6 +19,8 @@
 # Output: 1
 
 # my solution
+# time complexity: O(N) where N is the number of elements in the array
+# space complexity: O(N) where N is the number of elements in the array
 
 def singleNumber(nums):
     repeat = []
@@ -34,6 +35,8 @@ def singleNumber(nums):
 print(singleNumber([2,2,1]))
 
 # More optimised solution
+# time complexity: O(N) where N is the number of elements in the array
+# space complexity: O(1)
 
 def singleNumber(nums):
         """
