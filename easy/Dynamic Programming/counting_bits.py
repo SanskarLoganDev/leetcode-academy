@@ -1,4 +1,5 @@
 # 338. Counting Bits
+# Neetcode 150 (Important)
 
 # Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
 
@@ -34,6 +35,8 @@
 
 # using in-built functions, time complexity O(N)
 
+# time complexity: O(N log N) where N is the number of digits in the number
+# space complexity: O(N) where N is the number of digits in the number
 from typing import List
 
 class Solution:
@@ -45,7 +48,8 @@ class Solution:
     
     
 # Using DP and bitise operators
-
+# time complexity: O(N) where N is the number of digits in the number
+# space complexity: O(N) where N is the number of digits in the number
 class Solution:
     def countBits(self, n: int) -> List[int]:
         res = [0] * (n + 1)
@@ -54,8 +58,6 @@ class Solution:
             res[i] = res[i >> 1] + (i & 1)
         
         return res
-    
-# Certainly! Let's delve deeper into the logic behind res[i] = res[i >> 1] + (i & 1) and how it effectively counts the number of 1's in the binary representation of i.
 
 # Understanding res[i] = res[i >> 1] + (i & 1)
 # 1. Bitwise Right Shift (i >> 1):
