@@ -1,10 +1,9 @@
-# 191. NUMBER OF 1 BITS
+# 191. Number of 1 Bits
+# Neetcode 150 (Important)
 
 # Given a positive integer n, write a function that returns the number of 
 # set bits
 #  in its binary representation (also known as the Hamming weight).
-
- 
 
 # Example 1:
 
@@ -26,6 +25,9 @@
 
 # The input binary string 10000000 has a total of one set bit.
 
+# time complexity: O(1)
+# space complexity: O(1)
+
 def hammingWeight(n):
         """
         :type n: int
@@ -35,4 +37,8 @@ def hammingWeight(n):
         s2 = s1[2:]
         return s2.count('1')
     
-print(hammingWeight(11))
+# one liner:
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        return bin(n)[2:].count("1")
