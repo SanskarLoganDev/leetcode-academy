@@ -1,4 +1,5 @@
-# 268. MISSING NUMBER
+# 268. Missing Number
+# Neetcode 150 (Important)
 
 # Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
 
@@ -18,6 +19,8 @@
 # Output: 8
 # Explanation: n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums.
 
+# time complexity: O(nlogn)
+# space complexity: O(1)
 def missingNumber(nums):
         """
         :type nums: List[int]
@@ -29,7 +32,10 @@ def missingNumber(nums):
                 return i
         return nums[-1]+1
 print(missingNumber([9,6,4,2,3,5,7,0,1])) 
-    
+
+
+# time complexity: O(n)
+# space complexity: O(1)    
 def missingNumber2(nums):
     return sum(range(len(nums)+1)) - sum(nums)
 print(missingNumber2([9,6,4,2,3,5,7,0,1]))
