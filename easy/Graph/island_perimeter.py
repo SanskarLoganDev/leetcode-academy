@@ -36,6 +36,28 @@
 
 from typing import List
 
+# Best solution using simple traversal without dfs or bfs
+# time complexity O(M*N)
+# space complexity O(1)
+
+from collections import deque
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+        perimeter = 0
+        directions = [(1,0), (-1,0), (0,1), (0,-1)]
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j]==0:
+                    continue
+                for d in directions:
+                    ni = i + d[0]
+                    nj = j + d[1]
+                    if ni<0 or nj<0 or ni>=m or nj>=n or grid[ni][nj]==0:
+                        perimeter+=1
+        return perimeter
+
 # time complexity O(M*N)
 # Auxiliary space: O(1), Stack space complexity: O(M*N) in worst case when grid is filled with 1
 class Solution:
