@@ -67,7 +67,7 @@ class Solution:
 
 # Using BFS:
 # time complexity O(M*N)
-# space complexity O(min(M,N)) for the queue in worst case when grid is filled with 1
+# space complexity O(M*N) for the queue in worst case when grid is filled with 1
 
 from collections import deque
 class Solution:
