@@ -73,7 +73,7 @@ class Solution:
             n = len(grid[0]) # length of row
             if i<0 or i>=m or j<0 or j>=n or grid[i][j]==0:
                 self.perimeter+=1
-                return
+                return # we don't return any value here because we are updating the global variable self.perimeter
             if grid[i][j]==-1:
                 return
             grid[i][j]=-1 # marked visited
@@ -103,8 +103,9 @@ class Solution:
         perimeter = 0
         q = deque()
         directions = [[1,0], [-1,0], [0,1],[0,-1]] # to traverse in 4 directions
+        # loop to find the first land cell and add it to the queue
         for i in range(m):
-            if q:
+            if q: # if we have already found a land cell, we can break
                 break
             for j in range(n):
                 if grid[i][j]==1:
