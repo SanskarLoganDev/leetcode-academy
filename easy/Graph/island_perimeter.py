@@ -57,6 +57,8 @@ class Solution:
                     if ni<0 or nj<0 or ni>=m or nj>=n or grid[ni][nj]==0:
                         perimeter+=1
         return perimeter
+    
+# Solution using DFS:
 
 # time complexity O(M*N)
 # Auxiliary space: O(1), Stack space complexity: O(M*N) in worst case when grid is filled with 1
