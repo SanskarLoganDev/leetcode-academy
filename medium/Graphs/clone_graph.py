@@ -61,7 +61,12 @@ class Node:
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 
+# time complexity: O(N + M) where N is number of nodes and M is number of edges:
+# Each original node is enqueued/dequeued once → O(N).
 
+# For each node, you iterate over its neighbors. Across the whole traversal, each (undirected) edge is seen at most twice → O(M).
+
+# space complexity: O(N) for the hashmap and the recursion stack
 from typing import Optional
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
@@ -82,5 +87,46 @@ class Solution:
                 else:
                     clone_node.neighbors.append(self.mp[n]) # if already cloned, just add the reference to the cloned neighbor
         dfs(node, clone_node)
+
+        return clone_node
+    
+# Using BFS
+
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+
+# time complexity: O(N + M) where N is number of nodes and M is number of edges:
+# Each original node is enqueued/dequeued once → O(N).
+
+# For each node, you iterate over its neighbors. Across the whole traversal, each (undirected) edge is seen at most twice → O(M).
+
+
+# space complexity: O(N) for the hashmap and the recursion stack
+from collections import deque
+from typing import Optional
+class Solution:
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        if not node:
+            return None
+        clone_node = Node(node.val)
+        mp = {}
+        mp[node] = clone_node
+        q = deque([node])
+        while q:
+            nodeq = q.popleft() # nodeq is the current node from original graph
+            clone_nodeq = mp[nodeq] # clone_nodeq is the corresponding cloned node
+            for n in nodeq.neighbors:
+                if n not in mp:
+                    clone = Node(n.val)
+                    mp[n] = clone
+                    clone_nodeq.neighbors.append(clone) # add the cloned neighbor to the current cloned node's neighbors
+                    q.append(n)
+                else:
+                    clone_nodeq.neighbors.append(mp[n]) # if already cloned, just add the reference to the cloned neighbor
 
         return clone_node
