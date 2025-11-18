@@ -101,7 +101,7 @@ class Solution:
         pacificVisited = [[False]*n for _ in range(m)] # to check which cells can come up to pacific
         atlanticVisited = [[False]*n for _ in range(m)] # to check which cells can come up to atlantic
         
-        def bfs(heights, i, j, prevCellVal, visited):
+        def bfs(heights, i, j, visited):
             q = deque()
             q.append((i,j))
             visited[i][j] = True
