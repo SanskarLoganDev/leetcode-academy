@@ -123,16 +123,16 @@ class Solution:
         # bottom row: Atlantic connected already
 
         for j in range(n):
-            bfs(heights, 0, j, float("-inf"), pacificVisited) # top row
-            bfs(heights, m-1, j, float("-inf"), atlanticVisited) # bottom row
+            bfs(heights, 0, j, pacificVisited) # top row
+            bfs(heights, m-1, j, atlanticVisited) # bottom row
 
         # first col and last col
         # first col: Pacific connected already
         # last col: Atlantic connected already
 
         for i in range(m):
-            bfs(heights, i, 0, float("-inf"), pacificVisited) # first col
-            bfs(heights, i, n-1, float("-inf"), atlanticVisited) # last col
+            bfs(heights, i, 0, pacificVisited) # first col
+            bfs(heights, i, n-1, atlanticVisited) # last col
 
         for i in range(m):
             for j in range(n):
