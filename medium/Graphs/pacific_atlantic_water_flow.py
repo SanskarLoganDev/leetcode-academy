@@ -88,6 +88,60 @@ class Solution:
                     res.append([i,j])
         return res
 
+# Optimised solution using BFS:
+# time complexity O(M*N)
+# space complexity O(M*N) for visited sets
+
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        m = len(heights)
+        n = len(heights[0])
+        directions = [(1,0), (0,1), (-1,0), (0,-1)]
+        res = []
+        pacificVisited = [[False]*n for _ in range(m)] # to check which cells can come up to pacific
+        atlanticVisited = [[False]*n for _ in range(m)] # to check which cells can come up to atlantic
+        
+        def bfs(heights, i, j, prevCellVal, visited):
+            q = deque()
+            q.append((i,j))
+            visited[i][j] = True
+            while q:
+                i, j = q.popleft()
+                for d in directions:
+                    ni = i+d[0]
+                    nj = j+d[1]
+            
+                    if ni<0 or nj<0 or ni>=m or nj>=n:
+                        continue
+                    if visited[ni][nj] or heights[ni][nj] < heights[i][j]:
+                        continue
+                    visited[ni][nj]=True
+                    q.append((ni, nj))
+        
+        # top row and bottom row
+        # top row: Pacific connected already
+        # bottom row: Atlantic connected already
+
+        for j in range(n):
+            bfs(heights, 0, j, float("-inf"), pacificVisited) # top row
+            bfs(heights, m-1, j, float("-inf"), atlanticVisited) # bottom row
+
+        # first col and last col
+        # first col: Pacific connected already
+        # last col: Atlantic connected already
+
+        for i in range(m):
+            bfs(heights, i, 0, float("-inf"), pacificVisited) # first col
+            bfs(heights, i, n-1, float("-inf"), atlanticVisited) # last col
+
+        for i in range(m):
+            for j in range(n):
+                if pacificVisited[i][j] and atlanticVisited[i][j]:
+                    res.append([i,j])
+        
+        return res
+
+
 # optimised solution using DFS:
 
 # time complexity O(M*N)
