@@ -1,0 +1,33 @@
+Input 1:
+3
+DEE
+ELD
+EEE
+EEE
+EED
+EEE
+EEE
+EEE
+EED
+DRE
+0 0 0
+2 2 0
+
+Output 1:
+6
+
+Input 3:
+3
+DEE
+EEE
+EED
+EEE
+FEE
+EEB
+DDD
+EEE
+0 0 0
+0 2 2
+
+Output 3:
+6

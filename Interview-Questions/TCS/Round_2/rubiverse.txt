@@ -1,0 +1,15 @@
+Input 1:
+.E..
+ABCD
+.F..
+....
+abcdefghijklmnopqrstuvwx
+ABE
+
+Input 2:
+..FR
+.LD.
+..B.
+..T.
+zaqwsxedcvfrtgbnhyujmkio
+FTR
