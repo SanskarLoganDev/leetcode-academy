@@ -54,10 +54,43 @@ class Solution:
             if u in uniq and v in uniq:
                 if dfs(u, v):
                     return [u, v]
-            adj[u].append(v)
+            adj[u].append(v) # build the adjacency list after checking for cycle
             adj[v].append(u)
             uniq.add(u)
             uniq.add(v)
         
+# time complexity: O(N^2)
+# space complexity: O(N)
+
+# Using BFS to detect cycle
+from collections import deque        
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        n = len(edges)+1
+        adj = [[] for _ in range(n)]
+        uniq = set() # to keep track of unique nodes added so far
+        def bfs(u, v):
+            visited[u] = True
+            q = deque()
+            q.append(u)
+            while q:
+                source = q.popleft()
+                if source == v:
+                    return True
+                for neighbor in adj[source]:
+                    if visited[neighbor]==True:
+                        continue
+                    visited[neighbor]=True # mark as visited when enqueuing to avoid multiple enqueuing
+                    q.append(neighbor)
+            return False
         
+        for u, v in edges:
+            visited = [False]*n # reinitialize visited for every edge
+            if u in uniq and v in uniq:
+                if bfs(u, v):
+                    return [u, v]
+            adj[u].append(v) # build the adjacency list after checking for cycle
+            adj[v].append(u)
+            uniq.add(u) # add nodes to the set of unique nodes
+            uniq.add(v)
         
