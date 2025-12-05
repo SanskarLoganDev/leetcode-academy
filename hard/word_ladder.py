@@ -66,27 +66,39 @@ class Solution:
 # For each word you pull from the queue:
 
 # You generate at most 26 * L new_words (each position, each letter).
-
 # For each new_word you do:
-
 # new_word not in set1 → average O(1) (set lookup)
-
 # new_word in wordList → O(N) (because wordList is still a list)
-
 # So each new_word check costs O(N) because of the wordList membership test.
-
 # Per popped word:
-
 # 26 * L (neighbors) × O(N) (membership in wordList) = O(26 * L * N) = O(L * N)
-
-
 # In the worst case, BFS will eventually pop all reachable words, i.e. up to N words.
-
 # So total BFS cost:
-
 # O(N) words popped × O(L * N) work per word = O(L * N^2)
-
-
 # Add the initial O(N) check for endWord in wordList, and the total is still:
-
 # Time Complexity: O(L · N²)
+
+# Optimised solution using set for wordList to reduce membership test time complexity to O(1)
+# time complexity: O(L · N · 26) where N is the number of words in wordList, L is the length of each word, and 26 is for each letter in the alphabet.
+# space complexity: O(N) for the queue and set
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        if endWord not in wordList:
+            return 0
+        q = deque()
+        q.append((beginWord, 1)) # word and level
+        word_set = set(wordList) # using set for O(1) membership test
+
+        while q:
+            word, level = q.popleft()
+            for i in range(len(word)): # loop through each character in the word
+                for j in range(ord('a'), ord('z')+1): # change each character to every possible character from a to z
+                    new_word = word[:i]+chr(j)+word[i+1:]
+                    if new_word == endWord:
+                        return level+1
+                    if new_word in word_set:
+                        word_set.remove(new_word) # mark new word as visited by removing from set
+                        q.append((new_word, level+1)) # add new word to queue with level+1
+        return 0
+            
