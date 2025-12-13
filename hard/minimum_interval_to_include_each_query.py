@@ -55,3 +55,56 @@ class Solution:
                 res.append(s)
         return res
                 
+import heapq
+
+
+# time complexity: O(n log n + q log q) where n is the number of intervals and m is the number of queries
+# space complexity: O(n + q) for heap and result array
+class Solution:
+    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
+        res = [0 for _ in range(len(queries))] # to store the result for each query, here we could not use map as map wont inlcude duplicate queries
+        intervals.sort() # sort intervals based on start time, we sort both intervals and queries so they can be processed in order. O(n log n)
+        q_with_idx = [] # to store queries along with their original indices
+        for i in range(len(queries)): # populate the q_with_idx list
+            q_with_idx.append((queries[i], i))
+        q_with_idx.sort() # sort queries based on their values O(q log q)
+        min_heap = [] # min heap to store the intervals based on their size. Format: (right-left+1, right)
+        i = 0
+        for q, idx in q_with_idx: # O
+            while i<len(intervals) and intervals[i][0]<=q: # add all intervals that start before or at the query time
+                left, right = intervals[i]
+                heapq.heappush(min_heap, (right-left+1, right)) # push the size and end time of the interval into the min heap, O(log n)
+                i+=1
+            # min_heap[0] is the smallest interval that includes the query 
+            # min_heap[0][1] is the end time of that interval
+            while min_heap and min_heap[0][1]<q: # remove all intervals that end before the query time
+                heapq.heappop(min_heap)
+
+            if min_heap:
+                res[idx] = min_heap[0][0] # the smallest interval that includes the query
+            else:
+                res[idx] = -1
+        return res            
+    
+# Time complexity explanation
+# Your mental model right now is:
+
+# Outer for over m queries → O(m)
+
+# Inner while over n intervals → O(n)
+
+# heappush → O(log n)
+
+# So total = O(m · n · log n)
+
+# That would be correct if the inner while loop could run over all n intervals for each query.
+
+# But in your code, that’s not what happens, because of the way the pointer i is used.
+
+# Let’s look carefully.
+
+# Over all queries combined, the body of this while runs at most n times.
+
+# It does not restart from i = 0 for each query.
+
+# So you do at most n heappush calls total, not m * n.
