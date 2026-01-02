@@ -5,7 +5,6 @@
 
 # The solution set must not contain duplicate subsets. Return the solution in any order.
 
-
 # Example 1:
 
 # Input: nums = [1,2,3]
@@ -78,100 +77,199 @@ class Solution:
 
 # Dry run (step-by-step) for backtracking
 
-# Example: nums = [1, 2]
+# Detailed trace for nums = [1,2,3]
 
-# I’ll show (i, temp) and what happens.
+# I will number the steps.
+# I’ll show:
+
+# Call: backtrack(i)
+
+# What i means
+
+# temp before / after
+
+# When we save a subset
 
 # Start:
 
-# backtrack(0), temp = []
+# temp = []
 
-# At i = 0 (consider element 1)
+# results = []
 
-# Include 1
+# Call backtrack(0) (deciding about nums[0] = 1)
+
+# Call 1: backtrack(0) (decide about 1)
+# Option 1: INCLUDE 1
 
 # temp.append(1) → temp = [1]
 
-# call backtrack(1)
+# Call backtrack(1) (now decide about 2)
 
-# At i = 1 (consider element 2), temp = [1]
-
-# Include 2
+# Call 2: backtrack(1) (decide about 2), temp = [1]
+# Option 1: INCLUDE 2
 
 # temp.append(2) → temp = [1, 2]
 
-# call backtrack(2)
+# Call backtrack(2) (now decide about 3)
 
-# Base case i = 2 (past end)
+# Call 3: backtrack(2) (decide about 3), temp = [1,2]
+# Option 1: INCLUDE 3
 
-# append snapshot: results += [[1, 2]]
+# temp.append(3) → temp = [1, 2, 3]
 
-# return
+# Call backtrack(3) (base case)
 
-# Backtrack step
+# Call 4: backtrack(3) (base case), temp = [1,2,3]
 
-# temp.pop() removes last element (2) → temp = [1]
+# Base case hit → results.append([1,2,3])
 
-# Exclude 2
+# results = [[1,2,3]]
 
-# call backtrack(2) with temp = [1]
+# Return to Call 3 (where we were deciding about 3)
 
-# Base case i = 2
+# Now we must undo the include of 3 to try the exclude branch:
 
-# append snapshot: results += [[1]]
+# temp.pop() → removes 3 → temp = [1,2]
 
-# return
+# Option 2: EXCLUDE 3
 
-# Return to i = 0 level, backtrack further
+# Call backtrack(3) again
 
-# temp.pop() removes last element (1) → temp = []
+# Call 5: backtrack(3) (base case), temp = [1,2]
 
-# At i = 0 again, temp = []
+# Save snapshot → results.append([1,2])
 
-# Exclude 1
+# results = [[1,2,3], [1,2]]
 
-# call backtrack(1)
+# Return to Call 3
 
-# At i = 1 (consider element 2), temp = []
+# We are done with both include/exclude for 3. So Call 3 finishes and returns to Call 2 (where we were deciding about 2).
 
-# Include 2
+# But before returning, remember: Call 2 had included 2 earlier, so now we must undo that to try excluding 2.
+
+# temp.pop() → removes 2 → temp = [1]
+
+# Option 2: EXCLUDE 2
+
+# Call backtrack(2) (decide about 3) with temp = [1]
+
+# Call 6: backtrack(2) (decide about 3), temp = [1]
+# Option 1: INCLUDE 3
+
+# temp.append(3) → temp = [1,3]
+
+# Call backtrack(3) base case
+
+# Call 7: backtrack(3) base case, temp = [1,3]
+
+# Save → results.append([1,3])
+
+# results = [[1,2,3],[1,2],[1,3]]
+
+# Return to Call 6
+
+# Undo include of 3:
+
+# temp.pop() → temp = [1]
+
+# Option 2: EXCLUDE 3
+
+# Call backtrack(3) base case
+
+# Call 8: backtrack(3) base case, temp = [1]
+
+# Save → results.append([1])
+
+# results = [[1,2,3],[1,2],[1,3],[1]]
+
+# Return to Call 6
+
+# Now Call 6 is done (both choices for 3), so it returns to Call 2.
+# Call 2 is also done (both include/exclude for 2), so it returns to Call 1 (where we were deciding about 1).
+
+# But we had included 1 at the very beginning, so to explore excluding 1, we must undo it:
+
+# temp.pop() → removes 1 → temp = []
+
+# Back to Call 1: backtrack(0) (decide about 1), temp = []
+# Option 2: EXCLUDE 1
+
+# Call backtrack(1) (decide about 2) with temp = []
+
+# Call 9: backtrack(1) (decide about 2), temp = []
+# Option 1: INCLUDE 2
 
 # temp.append(2) → temp = [2]
 
-# call backtrack(2)
+# Call backtrack(2) (decide about 3)
 
-# Base case i = 2
+# Call 10: backtrack(2) (decide about 3), temp = [2]
+# Option 1: INCLUDE 3
 
-# append snapshot: results += [[2]]
+# temp.append(3) → temp = [2,3]
 
-# return
+# Call backtrack(3) base case
 
-# Backtrack
+# Call 11: backtrack(3) base case, temp = [2,3]
+
+# Save → results.append([2,3])
+
+# results = [[1,2,3],[1,2],[1,3],[1],[2,3]]
+
+# Return to Call 10
+
+# Undo include 3:
+
+# temp.pop() → temp = [2]
+
+# Option 2: EXCLUDE 3
+
+# Call backtrack(3) base case
+
+# Call 12: backtrack(3) base case, temp = [2]
+
+# Save → results.append([2])
+
+# results = [[1,2,3],[1,2],[1,3],[1],[2,3],[2]]
+
+# Return to Call 10
+
+# Call 10 done → return to Call 9.
+# Undo include 2 (to explore excluding 2):
 
 # temp.pop() → temp = []
 
-# Exclude 2
+# Option 2: EXCLUDE 2
 
-# call backtrack(2) with temp = []
+# Call backtrack(2) (decide about 3) with temp = []
 
-# Base case i = 2
+# Call 13: backtrack(2) (decide about 3), temp = []
+# Option 1: INCLUDE 3
 
-# append snapshot: results += [[]]
+# temp.append(3) → temp = [3]
 
-# return
+# Call backtrack(3) base case
 
-# Done.
+# Call 14: backtrack(3) base case, temp = [3]
 
-# Final results:
+# Save → results.append([3])
 
-# [[1, 2], [1], [2], []]
+# results = [[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3]]
 
-# Key backtracking insight
+# Return to Call 13
 
-# temp.append(x) = “choose”
+# Undo include 3:
 
-# recursive call = “explore with that choice”
+# temp.pop() → temp = []
 
-# temp.pop() = “undo choice” (so the next branch starts from the previous clean state)
+# Option 2: EXCLUDE 3
 
-# If you want, I can also draw the recursion tree for [1,2,3] so you can visually see how the include/exclude branches generate 2^n subsets.
+# Call backtrack(3) base case
+
+# Call 15: backtrack(3) base case, temp = []
+
+# Save → results.append([])
+
+# results = [[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3],[]]
+
+# Return and unwind completely.
