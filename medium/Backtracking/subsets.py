@@ -1,5 +1,6 @@
 # 78. Subsets
 # Neetcode 150 (Important)
+# (Perfect introduction to backtracking)
 
 # Given an integer array nums of unique elements, return all possible subsets (the power set).
 
@@ -24,6 +25,7 @@
 # Time comeplexity: O(N*2^N) where N is length of input array nums. As for each of N options we have 2 choices (include or exclude)
 # Space complexity: O(N) where N is length of input array nums
 
+# there are no choices here (no for loop) as even repeated elements will lead to different subsets as position matters in subsets
 from typing import List
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
