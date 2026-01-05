@@ -38,9 +38,9 @@ class Solution:
                 used.add(key) # add the current subset to used set
                 return
             
-            temp.append(nums[i])
+            temp.append(nums[i]) # include nums[i]
             backtrack(i+1)
-            temp.pop()
+            temp.pop() # exclude nums[i]
             backtrack(i+1)
         backtrack(0)
         return res
@@ -57,7 +57,7 @@ class Solution:
                 res.append(temp.copy())
                 return
             
-            temp.append(nums[i])
+            temp.append(nums[i]) # include nums[i]
             backtrack(i+1)
             temp.pop()
 # Following while loop means:
@@ -65,9 +65,9 @@ class Solution:
 # keep moving i forward until you reach the last occurrence of this duplicate run.
 # So if you are at the first 2 in [1,2,2,2,3], this loop jumps i to the last 2.
 
-            while i+1<len(nums) and nums[i]==nums[i+1]:
+            while i+1<len(nums) and nums[i]==nums[i+1]: # skip duplicates
                 i+=1
-            backtrack(i+1)
+            backtrack(i+1) # exclude nums[i]
         backtrack(0)
         return res
     
