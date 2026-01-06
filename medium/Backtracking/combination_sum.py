@@ -26,6 +26,28 @@
 
 # time complexity: O(N^(T/M)) where N is number of candidates, T is target and M is minimum value in candidates.
 from typing import List
+
+# backtracking with for loop (general template)
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+        temp = []
+        def backtrack(idx, total):
+            if total<0:
+                return
+            if total==0: # found a valid combination
+                res.append(temp.copy())
+                return
+            for i in range(idx, len(candidates)):
+                temp.append(candidates[i]) # include candidates[i]
+                backtrack(i, total - candidates[i])   # i (NOT i+1) because reuse is allowed
+                temp.pop() # backtrack after exploring that path
+
+        backtrack(0, target)
+
+        return res
+
+# same logic without for loop
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
         res = []
