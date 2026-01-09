@@ -44,14 +44,14 @@ class Solution:
 
         def isValidBoard(row, col):
             # upwards
-            for i in range(row-1, -1, -1):
+            for i in range(row-1, -1, -1): # check all rows above the current row
                 if board[i][col]=='Q':
                     return False
             
             # right upwards diagonal
             i = row-1
             j = col+1
-            while i>=0 and j<n:
+            while i>=0 and j<n: # check all columns to the right of the current column
                 if board[i][j]=='Q':
                     return False
                 i-=1
@@ -60,7 +60,7 @@ class Solution:
             # left upwards diagonal
             i = row-1
             j = col-1
-            while i>=0 and j>=0:
+            while i>=0 and j>=0: # check all columns to the left of the current column
                 if board[i][j]=='Q':
                     return False
                 i-=1
@@ -74,19 +74,63 @@ class Solution:
             if row>=n:
                 key = board.copy()
                 for i in range(n):
-                    key[i] = "".join(key[i])
+                    key[i] = "".join(key[i]) # convert list to string
 
                 res.append(key)
                 return
 
             for col in range(n):
                 if isValidBoard(row, col):
-                    board[row][col] = 'Q'
-                    backtrack(row+1)
-                    board[row][col] = '.'
+                    board[row][col] = 'Q' # place the queen
+                    backtrack(row+1) #@ move to the next row
+                    board[row][col] = '.' # backtrack
+
+        backtrack(0) # start from the first row
+
+        return res
+
+# Optimized approach using sets to track columns and diagonals
+# Same time complexity but still materially better in practice because it reduces the work per node in the search tree and 
+# prunes earlier with cheaper checks
+# time complexity: O(N!) where N is the size of the board (n x n)
+
+# Space complexity: O(N^2) for the board, Extra auxiliary space: O(N) and recursion stack space: O(N)
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        board = [["."] * n for _ in range(n)]
+        res = []
+        temp = [] 
+        columns = set()
+        diag = set()
+        anti_diag = set()           
+
+        def backtrack(row):
+            if row>=n:
+                key = board.copy()
+                for i in range(n):
+                    key[i] = "".join(key[i])
+
+                res.append(key)
+                return
+
+            for col in range(n): # iterate through all columns
+                diag_const = row+col # main_diag_const = row+col which is constant for main diagonal
+                anti_diag_const = row-col # anti_diag_const = row-col which is constant for anti diagonal
+                if col in columns or diag_const in diag or anti_diag_const in anti_diag: # check if the column or diagonal is already occupied
+                    continue
+                columns.add(col) # add the column and diagonals to the sets
+                diag.add(diag_const) # add main diagonal
+                anti_diag.add(anti_diag_const) # add anti diagonal
+
+                board[row][col] = 'Q'
+                backtrack(row+1)
+                board[row][col] = '.'
+
+                columns.remove(col)
+                diag.remove(diag_const)
+                anti_diag.remove(anti_diag_const)
 
         backtrack(0)
 
         return res
-
                 
