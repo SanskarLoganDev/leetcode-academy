@@ -70,3 +70,66 @@ class Solution:
                             res.add(word)
 
         return list(res) # convert set to list
+    
+# Optimised solution using Trie and Backtracking
+# Time complexity O(M * N * 3^L) where M,N are dimensions of board, L is length of longest word
+# Space complexity O(L) where L is length of longest word (recursion stack) + O(T) where T is total number of letters in trie
+
+# Why this is a real improvement (not just notation)
+
+# One board traversal instead of W traversals
+# The old method repeats essentially the same DFS work separately for each word.
+# The trie method explores the board once and “checks all words simultaneously” by following trie prefixes.
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.endOfWord = False
+
+    def addWord(self, word: str) -> None:
+        cur = self # here we have self and not self.root because we are calling this method on the TrieNode itself
+        for c in word:
+            if c not in cur.children:
+                cur.children[c] = TrieNode()
+            cur = cur.children[c]
+        cur.endOfWord = True
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        m = len(board)
+        n = len(board[0])
+        root = TrieNode()
+        for word in words:
+            root.addWord(word)
+        directions = [(0,1), (0,-1), (1,0), (-1, 0)]
+        res = set() # use set to avoid duplicates
+        visited = set() # to track visited cells during DFS
+
+        def dfs(i, j, curr_node, word): # here word is the word created so far
+            if i<0 or j<0 or i>=m or j>=n: # out of bounds
+                return
+            if (i, j) in visited:
+                return
+            if board[i][j] not in curr_node.children: # current letter not in trie path
+                return
+
+            visited.add((i, j)) # mark as visited
+            curr_node = curr_node.children[board[i][j]] # move to the next node in trie
+            word+=board[i][j] # append current letter to word
+            if curr_node.endOfWord: # found a valid word
+                res.add(word) # add to result set
+
+            for d in directions:
+                ni = i+d[0]
+                nj = j+d[1]
+
+                dfs(ni, nj, curr_node, word) 
+            visited.remove((i, j)) # backtrack
+
+        # traverse the grid just once and find all the words in trie if present
+        for i in range(m):
+            for j in range(n):
+                if root.children: # if trie is not empty
+                    dfs(i, j, root, "") # start DFS from each cell
+
+        return list(res)
