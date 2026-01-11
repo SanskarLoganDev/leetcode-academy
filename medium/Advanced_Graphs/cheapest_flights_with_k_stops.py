@@ -72,3 +72,20 @@ class Solution:
         if result[dst]==float("inf"): # if the destination is not reasched and its result is still infinity
             return -1
         return result[dst]
+
+# Why plain Dijkstra (min-heap) is not directly appropriate here
+
+# Dijkstra’s core correctness property is:
+# When you pop a node u from the min-heap, the cost you popped is the final shortest distance to u (no later path can beat it).
+# That property holds when the “state” is just the node, because Dijkstra explores in increasing cost order and edge weights are non-negative.
+
+# But this problem’s “state” is not just the node
+# Here, reaching the same city with different numbers of stops are different situations:
+# A cheap way to reach city X using too many stops might be invalid for reaching dst within the limit.
+# A more expensive way to reach city X with fewer stops could be the only path that still allows you to reach dst within k stops.
+
+# So the correct state is effectively (city, stops_used) (or (city, flights_used)), not just city.
+# If you try to run Dijkstra with only dist[city], you can get incorrect pruning:
+# You might set dist[v] to a cheap value achieved with many stops,
+# then reject a slightly higher-cost path that uses fewer stops,
+# even though the fewer-stops path is the one that leads to a valid solution.
