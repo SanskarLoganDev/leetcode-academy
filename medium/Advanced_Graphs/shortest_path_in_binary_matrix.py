@@ -32,6 +32,12 @@
 # 1 <= n <= 100
 # grid[i][j] is 0 or 1
 
+# BFS Approach
+# Here we don't have to compare different distances of different paths as the fastest path will reach the grid end first and then we return.
+
+# time complexity O(n^2) where n is the number of rows or columns in the grid
+# space complexity O(n^2) due to queue usage in BFS
+
 from collections import deque
 from typing import List
 class Solution:
