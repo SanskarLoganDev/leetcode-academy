@@ -42,10 +42,46 @@
 # 0 <= grid[i][j] < n2
 # Each value grid[i][j] is unique.
 
+# Dijkstra's Algorithm Approach
+
+import heapq
+
+from typing import List
+# time complexity O(n^2 log(n^2)) = O(n^2 log(n)), due to priority queue operations
+# space complexity O(n^2) due to visited set and priority queue
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        directions = [(0,1), (1,0), (-1,0), (0,-1)]
+        l = grid[0][0]
+        r = n*n-1
+        heap = []
+        visited = set()
+        visited.add((0,0))
+        heapq.heappush(heap, (grid[0][0], 0, 0)) # (time/max height, i, j)
+        while heap:
+            t, i, j = heapq.heappop(heap)
+            if i==n-1 and j==n-1:
+                return t
+            for d in directions:
+                ni = i+d[0]
+                nj = j+d[1]
+
+                if ni<0 or nj<0 or ni>=n or nj>=n:
+                    continue
+
+                if (ni, nj) in visited:
+                    continue
+
+                visited.add((ni, nj))
+                # here we have max(t, grid[ni][nj]) because we need to wait till the max height in the path
+                heapq.heappush(heap, (max(t, grid[ni][nj]), ni, nj)) 
+
+# DFS + Binary Search Approach
+
 # time complexity O(n^2 log(n^2)) = O(n^2 log(n)),  due to binary search and DFS/BFS
 # space complexity O(n^2) due to visited array
 
-from typing import List
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
         n = len(grid)
