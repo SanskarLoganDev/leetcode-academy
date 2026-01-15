@@ -27,6 +27,10 @@
 # -106 <= xi, yi <= 106
 # All pairs (xi, yi) are distinct.
 
+
+#### PRIMS ALGO ####
+
+
 # Complexity Analysis
 # Time complexity O(n^2.logn)
 # Space complexity O(n^2) (due to adjacency list and heap growth)
@@ -78,3 +82,186 @@ class Solution:
                     heapq.heappush(heap, [w, v])
 
         return sum
+    
+    
+    
+#### KRUSKAL'S ALGO ####
+
+from typing import List
+
+# Complexity Analysis
+# Time complexity O(n^2.logn)
+# Space complexity O(n^2) (due to edge list)
+class DSU:
+    def __init__(self, n: int):
+        self.parent = list(range(n))
+        self.size = [1] * n  # union by size
+
+    def find(self, x: int) -> int:
+        # Path compression (path halving)
+        while x != self.parent[x]:
+            self.parent[x] = self.parent[self.parent[x]]
+            x = self.parent[x]
+        return x
+
+    def union(self, a: int, b: int) -> bool:
+        ra = self.find(a)
+        rb = self.find(b)
+        if ra == rb:
+            return False
+
+        if self.size[ra] < self.size[rb]:
+            ra, rb = rb, ra
+        self.parent[rb] = ra
+        self.size[ra] += self.size[rb]
+        return True
+
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        n = len(points)
+        if n <= 1:
+            return 0
+
+        # 1) Build all edges in the complete graph
+        edges = []
+        for i in range(n):
+            x1, y1 = points[i]
+            for j in range(i + 1, n):
+                x2, y2 = points[j]
+                w = abs(x1 - x2) + abs(y1 - y2)
+                edges.append((w, i, j))
+
+        # 2) Sort edges by weight
+        edges.sort(key=lambda x: x[0])
+
+        # 3) Kruskal: add edges that connect different components
+        dsu = DSU(n)
+        mst_cost = 0
+        used = 0
+
+        for w, u, v in edges:
+            if dsu.union(u, v):
+                mst_cost += w
+                used += 1
+                if used == n - 1:
+                    break
+
+        return mst_cost
+
+# How DSU prevents cycles (the “why”)
+
+# When considering an edge (u, v):
+
+# If find(u) == find(v), u and v are already connected by previously chosen edges → adding this edge would create a cycle → skip.
+
+# Otherwise, union(u, v) merges the components → safe to add.
+
+# Dry run (Example 1)
+
+# points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+
+# Index them:
+
+# 0:(0,0)
+
+# 1:(2,2)
+
+# 2:(3,10)
+
+# 3:(5,2)
+
+# 4:(7,0)
+
+# Compute key Manhattan distances (not all shown, but enough to see Kruskal decisions):
+
+# (1,3): |2-5|+|2-2| = 3
+
+# (0,1): 4
+
+# (3,4): |5-7|+|2-0| = 4
+
+# (0,3): 7
+
+# (0,4): 7
+
+# (1,4): 7
+
+# (1,2): 9
+
+# (2,3): 10
+
+# (0,2): 13
+
+# (2,4): 14
+
+# Sorted (smallest first):
+
+# w=3 edge (1,3)
+
+# w=4 edge (0,1)
+
+# w=4 edge (3,4)
+
+# w=7 edge (0,3)
+
+# w=7 edge (0,4)
+
+# w=7 edge (1,4)
+
+# w=9 edge (1,2)
+# ... (others larger)
+
+# Now Kruskal:
+
+# Start: components = {0},{1},{2},{3},{4}, cost=0
+
+# Take (1,3) w=3
+
+# find(1)!=find(3) → union → cost=3
+
+# components: {1,3}, {0}, {2}, {4}
+
+# Take (0,1) w=4
+
+# 0 is separate, 1 is in {1,3} → union → cost=7
+
+# components: {0,1,3}, {2}, {4}
+
+# Take (3,4) w=4
+
+# 3 in {0,1,3}, 4 separate → union → cost=11
+
+# components: {0,1,3,4}, {2}
+
+# Next edges w=7 like (0,3), (0,4), (1,4)
+
+# all connect nodes already inside {0,1,3,4} → would create cycle → skip
+
+# Take (1,2) w=9
+
+# 2 is separate → union → cost=20
+
+# components: {0,1,2,3,4} (all connected)
+
+# We used n-1 = 4 edges, stop.
+# Answer = 20.
+
+# Time and space complexity
+
+# Let n = len(points).
+
+# Number of edges in complete graph:
+# E = n(n-1)/2 = O(n^2)
+
+# Building edges: O(n^2)
+
+# Sorting edges: O(E log E) = O(n^2 log n^2) = O(n^2 log n)
+
+# DSU operations across all edges: O(E α(n)) ~ O(n^2) (almost constant per op)
+
+# Total time: O(n^2 log n)
+# Space: storing edges dominates: O(n^2)
+
+# Important practical note: for n = 1000, E ≈ 499,500 edges—this is large but typically still workable in Python; 
+# Prim’s approach is often preferred because it avoids storing/sorting all edges, but Kruskal is still valid and commonly accepted.
