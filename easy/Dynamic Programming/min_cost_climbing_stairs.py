@@ -284,19 +284,6 @@ class Solution:
 # 0 → 2 → 4 → 6 → 7 → 9 → top
 # Costs paid: 1 + 1 + 1 + 1 + 1 + 1 = 6
 
-
-# tabulation bottom up approach
-# time complexity O(N) and space complexity O(N)
-class Solution:
-    def minCostClimbingStairs(self, cost: List[int]) -> int:
-        n=len(cost)
-        dp = [0]*n # this dp array stores the minimum cost to reach each step
-        dp[0]=cost[0] # cost to reach step 0 is cost[0]
-        dp[1]=cost[1] # cost to reach step 1 is cost[1]
-        for i in range(2,n):
-            dp[i] = cost[i]+min(dp[i-1], dp[i-2])
-        return min(dp[n-1],dp[n-2])
-
 # Wrong approach using greedy
 # Your current approach uses a greedy strategy to decide at each step whether to take one or two steps based on which option has a lower cost immediately ahead. However, this approach can miss the overall minimum cost path because it doesn't consider the cumulative cost from the current step to the end of the array. 
 
