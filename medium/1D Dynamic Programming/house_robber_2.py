@@ -57,3 +57,34 @@ class Solution:
         skip = nums[1:n] # all elements from 0 to n-1
         return max(self.house_robber(take), self.house_robber(skip)) # return the maximum of taking first element and skipping last or skipping first and taking last
           
+# time complexity O(N) and space complexity O(N)
+# using bottom up dynamic programming (tabulation)       
+class Solution:
+    def house_robber(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [0]*(n+1) # max stolen money till house i
+        # dp[i] = max stolen money till i house
+
+        # no house or uptill 1st house (at index 0 in nums) will be 
+        # sum of conditions before it but since this is the first house, it is 0
+        dp[0] = 0
+        dp[1] = nums[0] # only one house to rob
+
+         # fill dp array
+
+        for i in range(2, len(dp)): # here i goes through dp array
+            steal = nums[i-1] + dp[i-2] # rob current house and add money from i-2
+            skip = dp[i-1] # skip current house and take money till i-1
+
+            dp[i] = max(steal, skip) # store maximum of stealing or skipping
+        return dp[n] # maximum money till last house
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        # edge case as take [0:0] and skip [1:1] will not consider when n=1
+        if n==1:
+            return nums[0]
+
+        take = nums[0:n-1] # all elements from 0 to n-2
+        skip = nums[1:n] # all elements from 0 to n-1
+        return max(self.house_robber(take), self.house_robber(skip))
+          
