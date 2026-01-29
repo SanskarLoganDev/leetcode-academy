@@ -59,7 +59,7 @@ class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
         if amount==0:
             return 0
-        memo = {}
+        memo = {} # here memo[amt] = minimum coins needed to make amount amt
         memo[0] = 0 # base case where amount is 0 and we need 0 coins
         coins.sort() # we sort because if coin is greater than amount we can break early
         def solve(amt):
@@ -71,7 +71,7 @@ class Solution:
                 if diff<0: # no need to check further as coins are sorted
                     break
                 minn = min(minn, 1+solve(diff)) # take minimum of current minimum and 1 + result of remaining amount
-            memo[amt] = minn
+            memo[amt] = minn # store in memo
             return minn
 
         res = solve(amount)
