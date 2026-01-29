@@ -218,3 +218,142 @@ class Solution:
 # 1 | 11 | 06 ❌ because "06" starts with '0' (not a valid code)
 
         
+# Using bottom-up dynamic programming (tabulation)
+# time complexity O(N) and space complexity O(N)
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        n = len(s)
+        dp = [0]*(n+1)
+        dp[n] = 1
+        # What dp[i] stores
+
+        # dp[i] = number of ways to decode the suffix s[i:]
+        # (i.e., the substring starting at index i and going to the end)
+
+        # So:
+        # dp[0] = number of ways to decode the whole string s
+        # dp[1] = number of ways to decode s[1:]
+        # …
+        # dp[n] = number of ways to decode s[n:]
+        # And s[n:] is the empty string.
+        for i in range(n-1, -1, -1):
+            dp[i] = dp[i+1]
+            if s[i] == '0':
+                dp[i] = 0
+            else:
+                dp[i] = dp[i+1]
+                if i+1<n and 10<=int(s[i:i+2])<=26:
+                    dp[i]+=dp[i+2]
+        return dp[0]
+
+# Dry run for s = "11106" (bottom-up)
+
+# String: "1 1 1 0 6"
+# Indices: 0 1 2 3 4
+# n = 5
+
+# Definition:
+
+# dp[i] = # ways to decode s[i:]
+
+# Base: dp[n] = dp[5] = 1 (empty suffix has 1 valid completion)
+
+# Initialize:
+
+# dp = [0, 0, 0, 0, 0, 1]
+
+# Now fill from i = 4 down to 0.
+
+# i = 4 → suffix "6"
+
+# s[4] = '6' (not '0')
+
+# 1-digit take "6" → dp[4] = dp[5] = 1
+
+# 2-digit not possible
+
+# dp = [0, 0, 0, 0, 1, 1]
+
+# Meaning: "6" has 1 decoding.
+
+# i = 3 → suffix "06"
+
+# s[3] = '0'
+
+# If a suffix starts with '0', you cannot decode it
+
+# So dp[3] = 0
+
+# dp = [0, 0, 0, 0, 1, 1]
+
+# Meaning: "06" has 0 decodings. ✅ Correct.
+
+# This is the part that worried you—“won’t 10 be wrong?”
+# No, because we are not trying to decode "06" as part of "10". "10" will be handled from index 2.
+
+# i = 2 → suffix "106"
+
+# s[2] = '1' (not '0')
+
+# 1-digit take "1" → contributes dp[3]
+
+# dp[3] = 0 (because "06" can’t be decoded)
+
+# 2-digit take "10":
+
+# check s[2:4] = "10" → valid (10..26)
+
+# contributes dp[4] = 1
+
+# So:
+
+# dp[2] = dp[3] + dp[4] = 0 + 1 = 1
+
+# dp = [0, 0, 1, 0, 1, 1]
+
+# ✅ Notice what happened: the '0' at index 3 did NOT kill "10".
+
+# The bad case was decoding starting at index 3 ("06").
+
+# The good case is decoding "10" starting at index 2 and jumping over index 3 directly to index 4.
+
+# i = 1 → suffix "1106"
+
+# s[1] = '1'
+
+# 1-digit "1" → dp[2] = 1
+
+# 2-digit "11" valid → dp[3] = 0
+
+# So:
+
+# dp[1] = 1 + 0 = 1
+
+# dp = [0, 1, 1, 0, 1, 1]
+
+# i = 0 → suffix "11106"
+
+# s[0] = '1'
+
+# 1-digit "1" → dp[1] = 1
+
+# 2-digit "11" valid → dp[2] = 1
+
+# So:
+
+# dp[0] = 1 + 1 = 2
+
+# dp = [2, 1, 1, 0, 1, 1]
+
+# Final answer: dp[0] = 2
+
+# Key takeaway (the mental model)
+
+# When iterating backward:
+
+# dp[i] is “ways from here to the end.”
+
+# s[i] == '0' means “you cannot start a decoding chunk here,” so dp[i]=0.
+
+# "10" is handled at the '1' position by the two-digit transition that jumps over the '0'.
