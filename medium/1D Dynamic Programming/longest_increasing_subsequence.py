@@ -98,3 +98,46 @@ class Solution:
                 dp[i] = new_sub_len # update dp[i] to new_sub_len
         return max(dp)
                 
+                
+# Using patience sorting with binary search
+# time complexity O(N log N) and 
+# space complexity O(N)
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        res = []
+        for i in range(len(nums)): # iterate through all numbers
+            if not res: # if res is empty
+                res.append(nums[i])
+                continue
+            # binary search for the index of the smallest number >= nums[i]
+            l = 0
+            r = len(res)-1
+            idx = float("inf") # index of smallest number >= nums[i]
+
+            while l<=r:
+                mid = (l+r)//2
+                if res[mid]>=nums[i]: # found a number >= nums[i]
+                    idx = mid
+                    r = mid-1
+                else:
+                    l = l+1
+            if idx == float("inf"): # means no number in res is >= nums[i]
+                res.append(nums[i]) # append nums[i] to the end
+            else:
+                res[idx] = nums[i] # replace the number at idx with nums[i]
+        return len(res) # length of res is the length of longest increasing subsequence
+                
+# patience sorting using inbuilt bisect module for binary search
+
+import bisect
+# here bisect.bisect_left(res, x) returns the index of the first element in res which is >= x
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        res = []  # res[k] = smallest possible tail of an LIS of length k+1
+        for x in nums:
+            idx = bisect.bisect_left(res, x)  # first position with res[idx] >= x
+            if idx == len(res):
+                res.append(x)
+            else:
+                res[idx] = x
+        return len(res)
