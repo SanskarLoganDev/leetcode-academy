@@ -73,3 +73,21 @@ class Solution:
             return memo[key] # return result
 
         return solve(0, 0)
+    
+# Using bottom up dynamic programming (tabulation)
+# Time complexity: O(n1*n2) where n1 and n2 are lengths of text1 and text2 respectively.
+# Space complexity: O(n1*n2) for the dp table.
+
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m = len(text1)
+        n = len(text2)
+        dp = [[0]*(n+1) for _ in range(m+1)]  # dp[i][j] will store the length of longest common subsequence of text1 of length i and text2 of length j
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if text1[i-1]==text2[j-1]: # here we do i-1 and j-1 because dp is 1 indexed and text1 and text2 are 0 indexed
+                    dp[i][j] = 1+dp[i-1][j-1] # if characters match, add 1 to the result from previous indices
+                else:
+                    dp[i][j] = max(dp[i][j-1], dp[i-1][j]) # if characters do not match, take the maximum of skipping character from text1 or skipping character from text2
+
+        return dp[m][n]
