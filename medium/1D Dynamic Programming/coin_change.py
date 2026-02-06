@@ -80,6 +80,33 @@ class Solution:
         else:
             return -1
         
+# Memoization solution using 2D DP (Knapsack approach)
+# time complexity O(N*M) where N is amount and M is number of coins as we are storing results for each amount and coin index
+# space complexity O(N*M) for memoization table and O(N) for recursion stack
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        if amount==0:
+            return 0
+        memo = {}
+        n = len(coins)
+        def solve(i, amt): # here i is the index of coin we are currently considering and amt is the remaining amount we need to make
+            if amt==0:
+                return 0 # base case: for 0 amount we need 0 coins
+            if amt<0 or i>=n:
+                return float("inf")
+            key = (i, amt)
+            if key in memo:
+                return memo[key]
+            take = 1+solve(i, amt-coins[i]) # take current coin and stay on same coin index because we can use same coin multiple times, we do +1 because we are taking current coin
+            skip = solve(i+1, amt) # skip current coin and move to next coin index
+            memo[key] = min(take, skip)
+            return memo[key]
+        
+        res = solve(0, amount)
+        if res<float("inf"):
+            return res
+        else:
+            return -1
         
 # using bottom up dynamic programming (tabulation)
 # time complexity O(N*M) where N is amount and M is number of coins as we are filling dp array of size amount
