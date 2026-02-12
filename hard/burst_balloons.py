@@ -244,3 +244,389 @@ class Solution:
 #     maxx stays -> 167
 
 # return 167
+
+
+# Optimized solution using memoization
+# time complexity O(N^3) and space complexity O(N^2)
+
+
+# solve(l, r) returns:
+
+# the maximum coins you can get by bursting all balloons with indices in [l..r], assuming balloons outside this interval remain unburst for now.
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        nums = [1]+nums+[1]
+        memo = {}
+        def solve(l, r):
+            if l>r:
+                return 0
+            key = (l, r)
+            if key in memo:
+                return memo[key]
+            memo[key] = 0
+            for i in range(l, r+1):
+                coins = nums[l-1]*nums[i]*nums[r+1]
+                coins+= solve(l, i-1)+solve(i+1, r)
+                memo[key] = max(memo[key], coins)
+            return memo[key]
+
+        return solve(1, len(nums)-2)
+    
+    
+# Dry run (end-to-end, actual call order)
+
+# I’ll format as:
+
+# solve(l,r) called
+
+# loop over i
+
+# compute coins_last = nums[l-1] * nums[i] * nums[r+1]
+
+# then it needs:
+
+# left = solve(l, i-1)
+
+# right = solve(i+1, r)
+
+# total = coins_last + left + right
+
+# update memo[(l,r)] = max(...)
+
+# Base case: if l > r return 0 immediately.
+
+# Call 1: solve(1,4)
+
+# l<=r, not in memo → initialize memo[(1,4)] = 0.
+
+# Loop i = 1..4.
+
+# In solve(1,4), try i = 1 last
+
+# coins_last = nums[0]*nums[1]*nums[5] = 1*3*1 = 3
+
+# Need:
+
+# left = solve(1,0) (since i-1 = 0)
+
+# right = solve(2,4)
+
+# Call 2: solve(1,0)
+
+# Here l > r → return 0.
+
+# Call 3: solve(2,4)
+
+# Not in memo → set memo[(2,4)] = 0.
+# Loop i = 2..4.
+
+# In solve(2,4), try i = 2 last
+
+# coins_last = nums[1]*nums[2]*nums[5] = 3*1*1 = 3
+# Need:
+
+# left = solve(2,1)
+
+# right = solve(3,4)
+
+# Call 4: solve(2,1)
+
+# l > r → return 0
+
+# Call 5: solve(3,4)
+
+# Not in memo → set memo[(3,4)] = 0
+# Loop i = 3..4
+
+# In solve(3,4), try i = 3 last
+
+# coins_last = nums[2]*nums[3]*nums[5] = 1*5*1 = 5
+# Need:
+
+# left = solve(3,2)
+
+# right = solve(4,4)
+
+# Call 6: solve(3,2)
+
+# l > r → return 0
+
+# Call 7: solve(4,4)
+
+# Not in memo → set memo[(4,4)] = 0
+# Loop i = 4..4 only
+
+# In solve(4,4), try i = 4 last
+
+# coins_last = nums[3]*nums[4]*nums[5] = 5*8*1 = 40
+# Need:
+
+# solve(4,3) and solve(5,4)
+
+# Call 8: solve(4,3) → l>r return 0
+# Call 9: solve(5,4) → l>r return 0
+
+# Total = 40 + 0 + 0 = 40
+# Update memo[(4,4)] = 40
+# Return from solve(4,4) → 40
+
+# Back to solve(3,4) at i=3:
+# Total = coins_last(5) + left(0) + right(40) = 45
+# Update memo[(3,4)] = max(0,45) = 45
+
+# In solve(3,4), try i = 4 last
+
+# coins_last = nums[2]*nums[4]*nums[5] = 1*8*1 = 8
+# Need:
+
+# left = solve(3,3)
+
+# right = solve(5,4)
+
+# Call 10: solve(3,3)
+
+# Not in memo → set memo[(3,3)] = 0
+# Loop i=3..3
+
+# coins_last = nums[2]*nums[3]*nums[4] = 1*5*8 = 40
+
+# solve(3,2) (Call 11) → 0
+
+# solve(4,3) (Call 12) → 0
+# Total = 40
+# Update memo[(3,3)] = 40
+# Return solve(3,3) → 40
+
+# Call 13: solve(5,4) → l>r return 0
+
+# Back to solve(3,4) at i=4:
+# Total = 8 + 40 + 0 = 48
+# Update memo[(3,4)] = max(45,48) = 48
+
+# End solve(3,4) → return 48
+
+# Back to solve(2,4) at i=2:
+
+# left = 0
+
+# right = 48
+# Total = 3 + 0 + 48 = 51
+# Update memo[(2,4)] = max(0,51) = 51
+
+# In solve(2,4), try i = 3 last
+
+# coins_last = nums[1]*nums[3]*nums[5] = 3*5*1 = 15
+# Need:
+
+# left = solve(2,2)
+
+# right = solve(4,4) (already computed)
+
+# Call 14: solve(2,2)
+
+# Not in memo → set memo[(2,2)] = 0
+# Loop i=2..2:
+
+# coins_last = nums[1]*nums[2]*nums[3] = 3*1*5 = 15
+
+# solve(2,1) (Call 15) → 0
+
+# solve(3,2) (Call 16) → 0
+# Total = 15
+# Update memo[(2,2)] = 15
+# Return solve(2,2) → 15
+
+# Call 17: solve(4,4)
+
+# Memo hit → return 40
+
+# Back to solve(2,4) at i=3:
+# Total = 15 + 15 + 40 = 70
+# Update memo[(2,4)] = max(51,70) = 70
+
+# In solve(2,4), try i = 4 last
+
+# coins_last = nums[1]*nums[4]*nums[5] = 3*8*1 = 24
+# Need:
+
+# left = solve(2,3)
+
+# right = solve(5,4)
+
+# Call 18: solve(2,3)
+
+# Not in memo → set memo[(2,3)] = 0
+# Loop i=2..3
+
+# i=2 last in solve(2,3)
+
+# coins_last = nums[1]*nums[2]*nums[4] = 3*1*8 = 24
+# Need:
+
+# solve(2,1) (Call 19) → 0
+
+# solve(3,3) (Call 20) → memo hit = 40
+# Total = 24 + 0 + 40 = 64
+# Update memo[(2,3)] = 64
+
+# i=3 last in solve(2,3)
+
+# coins_last = nums[1]*nums[3]*nums[4] = 3*5*8 = 120
+# Need:
+
+# solve(2,2) (Call 21) → memo hit = 15
+
+# solve(4,3) (Call 22) → 0
+# Total = 120 + 15 + 0 = 135
+# Update memo[(2,3)] = max(64,135) = 135
+
+# Return solve(2,3) → 135
+
+# Call 23: solve(5,4) → 0
+
+# Back to solve(2,4) at i=4:
+# Total = 24 + 135 + 0 = 159
+# Update memo[(2,4)] = max(70,159) = 159
+
+# End solve(2,4) → return 159
+
+# Back to top solve(1,4) at i=1:
+
+# left = solve(1,0) = 0
+
+# right = solve(2,4) = 159
+# Total = coins_last(3) + 0 + 159 = 162
+# Update memo[(1,4)] = max(0,162) = 162
+
+# In solve(1,4), try i = 2 last
+
+# coins_last = nums[0]*nums[2]*nums[5] = 1*1*1 = 1
+# Need:
+
+# left = solve(1,1)
+
+# right = solve(3,4) (memo hit)
+
+# Call 24: solve(1,1)
+
+# Not in memo → set memo[(1,1)] = 0
+# Loop i=1..1:
+
+# coins_last = nums[0]*nums[1]*nums[2] = 1*3*1 = 3
+
+# solve(1,0) (Call 25) → 0
+
+# solve(2,1) (Call 26) → 0
+# Total = 3
+# Update memo[(1,1)] = 3
+# Return solve(1,1) → 3
+
+# Call 27: solve(3,4) memo hit → 48
+
+# Back to solve(1,4) at i=2:
+# Total = 1 + 3 + 48 = 52
+# Update memo[(1,4)] stays 162 (since 162 > 52)
+
+# In solve(1,4), try i = 3 last
+
+# coins_last = nums[0]*nums[3]*nums[5] = 1*5*1 = 5
+# Need:
+
+# left = solve(1,2)
+
+# right = solve(4,4) memo hit
+
+# Call 28: solve(1,2)
+
+# Not in memo → set memo[(1,2)] = 0
+# Loop i=1..2
+
+# i=1 last in solve(1,2)
+
+# coins_last = nums[0]*nums[1]*nums[3] = 1*3*5 = 15
+# Need:
+
+# solve(1,0) (Call 29) → 0
+
+# solve(2,2) (Call 30) → memo hit = 15
+# Total = 15 + 0 + 15 = 30
+# Update memo[(1,2)] = 30
+
+# i=2 last in solve(1,2)
+
+# coins_last = nums[0]*nums[2]*nums[3] = 1*1*5 = 5
+# Need:
+
+# solve(1,1) (Call 31) → memo hit = 3
+
+# solve(3,2) (Call 32) → 0
+# Total = 5 + 3 + 0 = 8
+# memo[(1,2)] stays 30
+
+# Return solve(1,2) → 30
+
+# Call 33: solve(4,4) memo hit → 40
+
+# Back to solve(1,4) at i=3:
+# Total = 5 + 30 + 40 = 75
+# memo[(1,4)] stays 162
+
+# In solve(1,4), try i = 4 last
+
+# coins_last = nums[0]*nums[4]*nums[5] = 1*8*1 = 8
+# Need:
+
+# left = solve(1,3)
+
+# right = solve(5,4) (0)
+
+# Call 34: solve(1,3)
+
+# Not in memo → set memo[(1,3)] = 0
+# Loop i=1..3
+
+# i=1 last in solve(1,3)
+
+# coins_last = nums[0]*nums[1]*nums[4] = 1*3*8 = 24
+# Need:
+
+# solve(1,0) (Call 35) → 0
+
+# solve(2,3) (Call 36) → memo hit = 135
+# Total = 24 + 0 + 135 = 159
+# Update memo[(1,3)] = 159
+
+# i=2 last in solve(1,3)
+
+# coins_last = nums[0]*nums[2]*nums[4] = 1*1*8 = 8
+# Need:
+
+# solve(1,1) (Call 37) → 3
+
+# solve(3,3) (Call 38) → 40
+# Total = 8 + 3 + 40 = 51
+# memo[(1,3)] stays 159
+
+# i=3 last in solve(1,3)
+
+# coins_last = nums[0]*nums[3]*nums[4] = 1*5*8 = 40
+# Need:
+
+# solve(1,2) (Call 39) → memo hit = 30
+
+# solve(4,3) (Call 40) → 0
+# Total = 40 + 30 + 0 = 70
+# memo[(1,3)] stays 159
+
+# Return solve(1,3) → 159
+
+# Call 41: solve(5,4) → 0
+
+# Back to solve(1,4) at i=4:
+# Total = 8 + 159 + 0 = 167
+# Update memo[(1,4)] = max(162,167) = 167
+
+# End of solve(1,4)
+
+# Return 167.
