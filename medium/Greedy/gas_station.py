@@ -67,3 +67,21 @@ class Solution:
             if j==i and amount>=0: # if we have completed the circuit and have enough gas left, we can return the starting station index
                 return i
         return -1
+    
+    
+# Optimised greedy solution
+# time complexity O(N) as we are checking for each station only once
+# space complexity O(1) as we are using only constant extra space
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        n = len(gas)
+        if sum(gas)<sum(cost): # if we don't have enough gas to complete the circuit, we can return -1
+            return -1
+        tank = 0
+        start = 0
+        for i in range(len(gas)):
+            tank = tank + gas[i] - cost[i] # we keep adding the gas and subtracting the cost from the tank as we move from station to station
+            if tank<0: # if at any point the tank becomes negative, it means we can't reach the next station from the current starting station, so we need to move the starting station to the next station and reset the tank
+                start = i+1
+                tank = 0
+        return start
