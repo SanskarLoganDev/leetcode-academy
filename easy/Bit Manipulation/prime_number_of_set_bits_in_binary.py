@@ -63,3 +63,24 @@ class Solution:
             if isBitPrime(i):
                 count+=1
         return count
+
+# time complexity O(N) 
+# space complexity O(1) since the number of set bits in an integer is at most 32 (for 32-bit integers) and we are using a constant amount of space to count the set bits and check for primality
+class Solution:
+    def countPrimeSetBits(self, left: int, right: int) -> int:
+        primes = [2,3,5,7,11,13,17,19,23,29,31] # list of prime numbers up to 31 (since the maximum number of set bits in an integer up to 10^6 is 20)
+        def isBitPrime(n):
+            if n in primes:
+                return True
+            return False
+
+        count = 0    
+        for i in range(left, right+1):
+            cnt = 0
+            x = i
+            while x: # constant number of iterations since the maximum number of set bits is 32
+                x = x & x-1 # and of number ans number-1 will remove the last set bit from the number
+                cnt+=1
+            if isBitPrime(cnt):
+                count+=1
+        return count
