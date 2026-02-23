@@ -32,6 +32,8 @@
 
 # 1 <= n <= 109
 
+# time complexity O(log(n)) where n is the input integer, we are converting the integer to binary and iterating through the binary representation which takes O(log(n)) time
+# space complexity O(log(n)) for the binary representation of the integer, can be O(1) if we don't store the binary representation and just iterate through the bits of the integer using bit manipulation
 class Solution:
     def binaryGap(self, n: int) -> int:
         bit = bin(n)[2:]
@@ -49,3 +51,20 @@ class Solution:
                 i=j
             j+=1
         return max_dist
+    
+    
+class Solution:
+    def binaryGap(self, n: int) -> int:
+        last = -1          # last position where we saw a 1
+        pos = 0            # current bit position (0 = LSB)
+        ans = 0
+
+        while n > 0:
+            if n & 1:      # current bit is 1
+                if last != -1:
+                    ans = max(ans, pos - last)
+                last = pos
+            n >>= 1 # shift n to the right by 1 bit (divide by 2)
+            pos += 1
+
+        return ans
