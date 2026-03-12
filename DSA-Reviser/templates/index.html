@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeetCode 150 — Random Picker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #141414;
+      --surface2:  #1c1c1c;
+      --border:    #2a2a2a;
+      --text:      #e8e8e8;
+      --muted:     #666;
+      --easy:      #4ade80;
+      --easy-bg:   #0d2818;
+      --medium:    #fb923c;
+      --medium-bg: #2a1400;
+      --hard:      #f87171;
+      --hard-bg:   #2a0a0a;
+      --accent:    #a78bfa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 540px;
+    }
+
+    .header { margin-bottom: 2rem; }
+    .header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .header p { font-size: 0.72rem; color: var(--muted); }
+
+    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      background: var(--accent);
+      color: #0d0d0d;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover  { opacity: 0.88; }
+    .btn:active { transform: scale(0.98); }
+
+    .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+    /* result */
+    #result { display: none; }
+    #result.visible { display: block; }
+
+    .pool-count { font-size: 0.68rem; color: var(--muted); margin-bottom: 12px; }
+    .pool-count span { color: var(--text); font-weight: 500; }
+
+    .result-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .result-num { font-size: 0.68rem; color: var(--muted); margin-bottom: 6px; }
+
+    .result-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 14px;
+    }
+
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .tag {
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag-topic  { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+    .tag-easy   { background: var(--easy-bg);   color: var(--easy);   border: 1px solid #166534; }
+    .tag-medium { background: var(--medium-bg); color: var(--medium); border: 1px solid #7c3a00; }
+    .tag-hard   { background: var(--hard-bg);   color: var(--hard);   border: 1px solid #7c1515; }
+
+    .lc-link {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .lc-link:hover { border-color: var(--accent); }
+
+    .error-msg {
+      font-size: 0.78rem;
+      color: var(--hard);
+      padding: 1rem;
+      background: var(--hard-bg);
+      border: 1px solid #7c1515;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>// neetcode_150.pick()</h1>
+      <p>select a difficulty and topic to get a random problem</p>
+    </div>
+
+    <div class="controls">
+      <div class="field">
+        <label>Difficulty</label>
+        <select id="diff">
+          <option value="all">All difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Topic</label>
+        <select id="topic">
+          <option value="all">All topics</option>
+          {% for t in topics %}
+          <option value="{{ t }}">{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" onclick="pickProblem()">→ pick random problem</button>
+
+    <div id="result">
+      <div class="divider"></div>
+      <div id="result-body"></div>
+    </div>
+  </div>
+
+  <script>
+    async function pickProblem() {
+      const diff  = document.getElementById('diff').value;
+      const topic = document.getElementById('topic').value;
+
+      const res  = await fetch(`/random?diff=${encodeURIComponent(diff)}&topic=${encodeURIComponent(topic)}`);
+      const data = await res.json();
+
+      const resultDiv = document.getElementById('result');
+      const body      = document.getElementById('result-body');
+      resultDiv.classList.add('visible');
+
+      if (data.error) {
+        body.innerHTML = `<div class="error-msg">${data.error}</div>`;
+        return;
+      }
+
+      body.innerHTML = `
+        <div class="pool-count"><span>${data.pool}</span> problems in pool</div>
+        <div class="result-card">
+          <div class="result-num">#${data.n}</div>
+          <div class="result-name">${data.name}</div>
+          <div class="tags">
+            <span class="tag tag-topic">${data.topic}</span>
+            <span class="tag tag-${data.diff}">${data.diff}</span>
+          </div>
+          <a class="lc-link" href="${data.url}" target="_blank">open on leetcode →</a>
+        </div>`;
+    }
+  </script>
+</body>
+</html>
