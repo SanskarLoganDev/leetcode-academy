@@ -1,4 +1,4 @@
-# 169 MAJORITY ELEMENT
+# 169 Majority Element
 
 # Given an array nums of size n, return the majority element.
 
@@ -24,6 +24,8 @@
 # all other elements combined. It works on the principle mentioned in the question:
 # "The majority element is the element that appears more than ⌊n / 2⌋ times"
 
+# time complexity: O(N)
+# space complexity: O(1)
 def majorityElement(nums):
         """
         :type nums: List[int]
@@ -40,6 +42,12 @@ def majorityElement(nums):
                 count-=1
         return candidate
 
+# Logic:
+# Think of it like a battle/elimination game:
+
+# Every element gets 1 vote
+# When two different elements meet, they cancel each other out
+# The majority element has so many votes that it cannot be fully cancelled
 
 # My solu
 
@@ -103,3 +111,12 @@ def majorityElement(nums):
         """
         c = Counter(nums)
         return c.most_common(1)[0][0]
+    
+# another solution using Counter
+from collections import Counter
+from typing import List
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        for key, val in Counter(nums).items():
+            if val>=(len(nums)//2):
+                return key
