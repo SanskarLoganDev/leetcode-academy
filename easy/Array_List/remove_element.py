@@ -33,6 +33,9 @@
 # Explanation: Your function should return k = 2, with the first two elements of nums being 2.
 # It does not matter what you leave beyond the returned k (hence they are underscores).
 
+# time complexity: O(N)
+# Space complexity: O(N)
+
 def removeElement(nums, val):
     """
     :type nums: List[int]
@@ -46,6 +49,9 @@ def removeElement(nums, val):
     for i in range(len(res)):
         nums[i]=res[i]
     return len(res)
+
+# time complexity: O(N)
+# Space complexity: O(1)
 
 def removeElement2(nums,val): # Using 2 pointer method
     k = 0
