@@ -1,4 +1,5 @@
-# 347. Top K Frequent Elements Neetcode 150 Important
+# 347. Top K Frequent Elements 
+# Neetcode 150 Important
 
 # Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
 
@@ -20,14 +21,21 @@
  
 # Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
 
-# time complexity O(n log k) (leetcode says it is O(n))
-# space complexity O(n) for storing the count of each element.
+
+# Let:
+
+# N = len(nums)
+# M = number of distinct elements in nums (so M ≤ N)
+
+
+# time complexity: O(N) + O(M log k), worst case where k is large and M=N: O(N + NlogN) or O(NlogN)
+# space complexity O(N) for storing the count of each element.
 from typing import List
 from collections import Counter
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        count = Counter(nums)
-        return [x[0] for x in count.most_common(k)]
+        count = Counter(nums) # time: O(N), space: O(M)
+        return [x[0] for x in count.most_common(k)] # count.most_common(): time: O(mlogk), if k is large: O(mlogm)
     
 # Putting it together:
 
@@ -96,3 +104,23 @@ class Solution:
 # → Overall time complexity: O(n).
 
 # (Space complexity is also O(n), for the count map and the bucket list.)
+
+
+# Heap solution, first thing comes to mind when key words like 'Top K' elements appear
+
+# time complexity = O(N + M + KlogM) = O(N + KlogN), worst case  is large: O(N + NlogN) or O(NlogN)
+import heapq
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        count = {}
+        heap = []
+        for n in nums: # cost: O(N)
+            count[n] = count.get(n, 0)+1
+        for i, j in count.items(): # cost: O(M)
+            heap.append((-j, i))
+        heapq.heapify(heap) # cost: O(M)
+        res = []
+        for i in range(k): # cost: O(KlogM)
+            res.append(heapq.heappop(heap)[1])
+
+        return res
