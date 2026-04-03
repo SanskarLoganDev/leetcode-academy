@@ -28,6 +28,9 @@
 
 # Follow up: Could you come up with a one-pass algorithm using only constant extra space?
 
+# time complexity: O(n)
+# space complexity: O(1) since the hashmap will have at most 3 keys
+
 from typing import List
 class Solution:
     def sortColors(self, nums: List[int]) -> None:
@@ -39,7 +42,7 @@ class Solution:
         mx = max(nums)
         mp = {}
         for n in nums:
-            mp[n] = mp.get(n, 0)+1
+            mp[n] = mp.get(n, 0)+1 
         i = 0
         for num in range(mn, mx+1):
             if num in mp:
@@ -48,3 +51,24 @@ class Solution:
                     mp[num]-=1
                     i+=1
         return nums
+    
+# time complexity: O(n)
+# space complexity: O(1) since we are using only 3 pointers    
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        i = 0 # monitors 0 
+        j = 0 # monitors 1
+        k = len(nums)-1 # monitors 2
+        while j<=k: # we will be essentially moving j forward and swap with i and k when we encounter 0 and 2 respectively
+            if nums[j]==1: # j is the pointer for 1 so we can just move forward
+                j+=1
+            elif nums[j]==2: # 2 is in the end, swap with k and move k backward
+                nums[j], nums[k] = nums[k], nums[j] 
+                k-=1
+            else: # nums[j]==0
+                nums[j], nums[i] = nums[i], nums[j]
+                i+=1 # we forward i and j both because we know that the swapped value at j is 1 and we can just move forward
+                j+=1
