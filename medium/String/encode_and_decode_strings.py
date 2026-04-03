@@ -1,4 +1,5 @@
-# 271. Encode and Decode Strings (Neetcode 150) Important
+# 271. Encode and Decode Strings 
+# (Neetcode 150) Important
 
 # Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
 
@@ -49,6 +50,7 @@
 # 0 <= strs[i].length <= 200
 # strs[i] contains any possible characters out of 256 valid ASCII characters.
 
+# time complexity: O(N), space: O(M), where M is length of combined string
 from typing import List
 class Codec:
     def encode(self, strs: List[str]) -> str:
@@ -58,9 +60,9 @@ class Codec:
         for s in strs:
             res+=str(len(s))+"#"+s
         return res
-            
+# We use # as a delimiter between the length and the actual string (string can have digits like "123"), so the decoder can reliably figure out where the length ends.       
         
-
+# time complexity: O(N), space: O(M) where M is length of list after strings combined to a word
     def decode(self, s: str) -> List[str]:
         """Decodes a single string to a list of strings.
         """
@@ -70,7 +72,7 @@ class Codec:
             j = i
             while s[j] !='#':
                 j+=1
-            length = int(s[i:j])
+            length = int(s[i:j]) # here j is on #
             res.append(s[j+1:j+1+length]) # extract the word, we have used j+1 to skip the '#' and j+1+length to get the word of length 'length'
             i = j+1+length
         return res
