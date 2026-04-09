@@ -24,6 +24,9 @@
 
 # Simple logic: if we sort them then the most difference will be in the first and last elements as sort function sorts lexicographically
 # time complexity: O(n * L * log(n) + L) which simplifies to O(n * L * log(n) where L is common subtring length
+# Sorting strings isn't just O(n log n). Each comparison during sorting compares two strings character-by-character, 
+# which takes O(L) time where L is the average string length. So sorting n strings takes O(n * L * log(n))
+
 # space complexity: O(L)
 from typing import List
 class Solution:
