@@ -23,7 +23,7 @@
 # strs[i] consists of only lowercase English letters if it is non-empty.
 
 # Simple logic: if we sort them then the most difference will be in the first and last elements as sort function sorts lexicographically
-# time complexity: O(nlogn)+O(L) whre L is common subtring length
+# time complexity: O(n * L * log(n) + L) which simplifies to O(n * L * log(n) where L is common subtring length
 # space complexity: O(L)
 from typing import List
 class Solution:
