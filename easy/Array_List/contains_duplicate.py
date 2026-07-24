@@ -24,7 +24,16 @@
 
 # This method is correct but gives time exceeded error for a really long test case
 
-def containsDuplicate(nums):
+# Clarifying questions
+
+# What's the size range of nums? Could it be empty or have just 1 element?
+# What's the range of values — could they be negative, zero, very large?
+# Is the array sorted or unsorted?
+# Do we care about the count of duplicates, or just whether at least one exists?
+# What should we return for an empty array or single-element array?
+
+from typing import List
+def containsDuplicate(nums: List[int]):
     dup = []
     for i in range(len(nums)):
         if nums[i] in dup:

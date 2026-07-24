@@ -18,10 +18,31 @@
 
 # Output: false
 
+# true brute force solution: comparing letter by letter
+# time complexity: O(N^2), space complexity: O(N)
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        
+        t_list = list(t)
+        for char in s:
+            if char in t_list:
+                t_list.remove(char)
+            else:
+                return False
+        return True
+
+sol = Solution()
+ans = sol.isAnagram("anagram", "nagaram")
+print(ans)
+
+
+# time complexity: O(NlogN), space complexity: O(N)
 def validAnagram(s,t):
     if len(s)!=len(t):
             return False
-    s=''.join(sorted(s)) # sorted has the time complexity of O(NlogN)
+    s=''.join(sorted(s)) # sorted has the time complexity of O(NlogN). .sort() does not directly work on string
     t=''.join(sorted(t))
     return s==t
 

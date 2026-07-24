@@ -52,7 +52,7 @@ class Solution:
             alpha = [0]*26
             for s in string:
                 alpha[ord(s)-ord('a')]+=1
-            cat = "".join(str(alpha))
+            cat = tuple(alpha) # join does nothing here as str(alpha) already converts the list into something like '[1,0,0,2,1,0]'. Use tuple instead as it is hashable
             if cat in anagrams:
                 anagrams[cat].append(string)
             else:
