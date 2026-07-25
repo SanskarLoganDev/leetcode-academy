@@ -44,6 +44,52 @@
 # board[i].length == 9
 # board[i][j] is a digit 1-9 or '.'.
 
+# True brute force solution:
+# Time: still O(1) for this fixed 9x9 board (or O(n²) in terms of general board size if it varied), but with a larger constant factor — three full passes over the board instead of one, and val in seen is O(9) list scan instead of O(1) set lookup.
+# Space: O(1) as well (bounded lists of size ≤9), though again with a worse constant than the set-based version.
+
+from typing import List
+
+class Solution:
+    def validSudoku(self, board: List[List[str]]) -> bool:
+        # Check rows
+        for i in range(9):
+            seen = []
+            for j in range(9):
+                val = board[i][j]
+                if val == ".":
+                    continue
+                if val in seen:
+                    return False
+                seen.append(val)
+        
+        # Check columns
+        for j in range(9):
+            seen = []
+            for i in range(9):
+                val = board[i][j]
+                if val == ".":
+                    continue
+                if val in seen:
+                    return False
+                seen.append(val)
+        
+        # Check 3x3 boxes
+        for box_row in range(3):
+            for box_col in range(3):
+                seen = []
+                for i in range(box_row*3, box_row*3+3):
+                    for j in range(box_col*3, box_col*3+3):
+                        val = board[i][j]
+                        if val == ".":
+                            continue
+                        if val in seen:
+                            return False
+                        seen.append(val)
+        
+        return True
+
+
 # Both solutions have time complexity of O(N^2) and space complexity of O(N), where N is the number of cells in the Sudoku board (which is 81 for a standard 9x9 board).
 
 from typing import List

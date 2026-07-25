@@ -28,6 +28,29 @@
 # M = number of distinct elements in nums (so M ≤ N)
 
 
+
+# Brute force solution
+# Time complexity: O(N^2), space complexity: O(N)
+from typing import List
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        unique = list(set(nums))
+        counts = []
+        for num in unique:
+            count = 0
+            for n in nums:
+                if n == num:
+                    count += 1
+            counts.append((count, num))
+        
+        counts.sort(reverse=True)
+        return [num for count, num in counts[:k]]
+
+sol = Solution()
+ans = sol.topKFrequent([1,2,3,4,1,1,1,1,2], 2)
+print(ans)
+
 # time complexity: O(N) + O(M log k), worst case where k is large and M=N: O(N + NlogN) or O(NlogN)
 # space complexity O(N) for storing the count of each element.
 from typing import List

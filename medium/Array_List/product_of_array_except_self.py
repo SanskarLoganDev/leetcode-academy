@@ -30,20 +30,20 @@ from typing import List
 # the following solution uses prefix and postfix arrays to store the products of elements before and after each index
 # which allows us to compute the product of all elements except the current one without using division.
 class Solution:
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
-        prefix = []
+    def productExceptSelf(self, nums: List[int]) -> List[int]: # Ex: [1,2,3,4]
+        prefix = [] # includes the current num in the multiplication
         postfix = []
         pre, post = 1, 1
         
         for n in nums:
             pre*=n
-            prefix.append(pre)
-        for n in nums[::-1]:
+            prefix.append(pre) # pre = [1,2,6,24]
+        for n in nums[::-1]: # nums rev = [4,3,2,1]
             post*=n
-            postfix.append(post)
-        postfix = postfix[::-1]
+            postfix.append(post) # current postfix = [4,12,24,24]
+        postfix = postfix[::-1] # then reverse to get correct postfix = [24,24,12,4]
         output=[]
-        for i in range(len(nums)):
+        for i in range(len(nums)): # mutiply prefix in prefix array before the current index and postfix after the current index in the postfix array
             pre = i-1
             post = i+1
             if pre<0:
@@ -57,18 +57,23 @@ class Solution:
 # time complexity O(n), space complexity O(1) solution
 
 class Solution:
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
+    def productExceptSelf(self, nums: List[int]) -> List[int]: # [1,2,3,4]
         pre, post = 1, 1
-        output = [1]*len(nums)
+        output = [1]*len(nums) # [1,1,1,1]
         for i in range(len(nums)): # calculate prefix products (different than the previous solution, as in the first element we don't need to multiply by 1, its value is already 1, the multiplication is done in the next loop)
-            output[i] = pre
+            output[i] = pre # output = [1,1,2,6]
             pre*=nums[i]
-        for i in range(len(nums)-1,-1,-1):
-            output[i]*=post
-            post*=nums[i]
+            
+        # output = [1,1,2,6]
+        for i in range(len(nums)-1,-1,-1): # reverse [1,2,3,4] = [4,3,2,1]
+            output[i]*=post # output[3] = output[3]*1 = 6*1 = 6, 2*4 = 8, 1*12 = 12, 1*24 = 24
+            post*=nums[i] # 1*nums[3] = 1*4 = 4, 4*3 = 12, 12*2 = 24, 24*1 = 24
         return output
 
-
+sol = Solution()
+ans = sol.productExceptSelf([1,2,3,4]) # [24, 12, 8, 6]
+ 
+print(ans)
 # Below is a line-by-line dry run of **both** of your solutions on:
 
 # `nums = [1, 2, 3, 4]`

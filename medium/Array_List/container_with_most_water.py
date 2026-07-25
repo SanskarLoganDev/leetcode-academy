@@ -25,6 +25,26 @@
 # 2 <= n <= 105
 # 0 <= height[i] <= 104
 
+
+# Brute force solution
+# Time Complexity: O(n^2)
+# Space Complexity: O(1)
+class Solution:
+    def maxVol(self, nums: List[int]) -> int:
+        max_vol = 0
+        for i in range(len(nums)):
+            for j in range(i+1, len(nums)):
+                length = j-i
+                height = min(nums[i], nums[j])
+                max_vol = max(max_vol, length*height)
+        return max_vol
+
+sol = Solution()
+ans = sol.maxVol([1,8,6,2,5,4,8,3,7])
+print(ans)
+
+
+
 # Time Complexity: O(n)
 # Space Complexity: O(1)
 from typing import List
@@ -42,4 +62,14 @@ class Solution:
             else:
                 r-=1
         return max_vol
-        
+
+
+# how do you know you're not skipping over a better answer?" Here's the reasoning you should be able to state:
+
+# At any step, the width can only shrink as l and r move inward — it never grows again. 
+# So the only way a future position could beat the current volume is if the height increases enough to outweigh the smaller width. 
+# Now, the container's height is always limited by the shorter of the two lines. 
+# If I move the pointer at the taller line instead, the width still shrinks, but the height is still capped by the same short line 
+# (or gets even worse if the new line is shorter) — so that move can never produce a better result. 
+# Moving the shorter line's pointer is the only move that has any chance of increasing the height enough to compensate for the 
+# reduced width. That's why it's always safe (and necessary) to move the shorter pointer.

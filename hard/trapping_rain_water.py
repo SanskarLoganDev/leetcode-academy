@@ -42,6 +42,32 @@ class Solution:
             if vol > 0:
                 total+=vol
         return total
+    
+# Same code but optimized by comparing adjacent heights. Time: O(N), Space: O(N)
+from typing import List
+
+class Solution:
+    def trapRain(self, height: List[int]) -> int:
+        n = len(height)
+        max_left = [0]*n 
+        max_right = [0]*n
+        total = 0
+        for i in range(1, n):
+            max_left[i] = max(max_left[i-1], height[i])
+
+        for i in range(n-2, -1, -1):
+            max_right[i] = max(max_right[i+1], height[i])
+
+        for i in range(n):
+            vol = min(max_left[i], max_right[i]) - height[i]
+            if vol>0:
+                total+=vol
+        return total
+                
+
+sol = Solution()
+ans = sol.trapRain([0,1,0,2,1,0,1,3,2,1,2,1]) # [4,2,0,3,2,5]
+print(ans)
 
 # Dynamic Programming Approach
 # Time Complexity: O(n) - We traverse the height array once to calculate the trapped water.
