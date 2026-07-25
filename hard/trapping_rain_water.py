@@ -103,17 +103,39 @@ class Solution:
     def trap(self, height: List[int]) -> int:
         n = len(height)
         l,r = 0, n-1
-        left_max, right_max = height[l], height[r]
+        left_max, right_max = height[l], height[r] # on the initial and last indexes there would be no trapped water therefore it does not matter
         res = 0
         while l<r:
             if left_max<right_max:
                 l+=1
-                left_max = max(left_max, height[l])
+                left_max = max(left_max, height[l]) # if height is max here, the next line vol = 0 as it would be height[l]-height[l]
                 if left_max - height[l]>0:
-                    res+= left_max - height[l]
+                    res+= left_max - height[l] # we could use here min(left_max, right_max) - height[l] and answer would be same as shown in the solution below
             else:
                 r-=1
                 right_max = max(right_max, height[r])
                 if right_max - height[r]>0:
                     res+= right_max - height[r]
         return res
+
+# Using the original formula for this problem
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        l,r = 0, n-1
+        left_max, right_max = height[l], height[r]
+        total = 0
+        while l<r:
+            if left_max<right_max:
+                l+=1
+                left_max = max(left_max, height[l])
+                vol = min(left_max, right_max) - height[l]
+                if vol>0:
+                    total+=vol
+            else:
+                r-=1
+                right_max = max(right_max, height[r])
+                vol = min(left_max, right_max) - height[r]
+                if vol>0:
+                    total+= vol
+        return total

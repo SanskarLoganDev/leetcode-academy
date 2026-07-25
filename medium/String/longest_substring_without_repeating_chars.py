@@ -1,4 +1,5 @@
-# 3. Longest Substring Without Repeating Characters (Neetcode 150) Important
+# 3. Longest Substring Without Repeating Characters 
+# (Neetcode 150) Important
 
 # Given a string s, find the length of the longest substring without duplicate characters.
 # topics: Hash Table, Two Pointers, String
@@ -25,6 +26,28 @@
 # 0 <= s.length <= 5 * 104
 # s consists of English letters, digits, symbols and spaces.
 
+# Brute force solution
+# Time complexity: O(N^3) (2 for loops and set conversion inside the loop), space complexity: O(N) (set of string)
+class Solution: 
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        max_len = 0
+
+        for i in range(len(s)):                    # every start position
+            for j in range(i+1, len(s)+1):         # every end position
+                substring = s[i:j]
+                if len(substring) == len(set(substring)):  # all unique? here we use set that is extra space O(N) and converting entire string to set takes O(N) time
+                    max_len = max(max_len, len(substring))
+
+        return max_len
+
+sol = Solution()
+print(sol.lengthOfLongestSubstring("abcabcbb"))  # 3
+print(sol.lengthOfLongestSubstring("bbbbb"))     # 1
+print(sol.lengthOfLongestSubstring("pwwkew"))    # 3
+
+
+# Optimised solution
+# Time complexity: O(N), space complexity: O(N)
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         char_index = {} # dictionary {"element": "its index in s"}
