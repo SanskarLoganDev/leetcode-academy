@@ -59,8 +59,12 @@ class Solution:
                 stack.append(stack.pop()*stack.pop())
             elif n=='/': # in case of division, the first popped element is divided by the second popped element (order matters here)
                 a, b = stack.pop(), stack.pop()
-                stack.append(int(b/a)) # # Use int() to truncate towards zero
+                stack.append(int(b/a)) # Use int() to truncate towards zero
             else:
                 stack.append(int(n))
                 
         return stack[0]
+    
+# Example of truncation
+int(-7 / 2)   # → int(-3.5) → -3   (truncates towards zero)
+-7 // 2       # → -4               (floors towards negative infinity)
