@@ -1,4 +1,4 @@
-# 155. Min Stack (Neetcode 150) Important
+# 155. Min Stack
 # Neetcode 150 (Important)
 
 # Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
@@ -63,6 +63,27 @@ class MinStack:
     def getMin(self) -> int:
         return self.minStack[-1]
 
+# Another slightly more optimised solu:
+class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.minStack = []  # only holds "record-breaking" minimums
+
+    def push(self, value: int) -> None:
+        self.stack.append(value)
+        if not self.minStack or value <= self.minStack[-1]: # only hold if there is a new minimum
+            self.minStack.append(value)
+
+    def pop(self) -> None:
+        val = self.stack.pop()
+        if val == self.minStack[-1]: # only pop from minstack if the value is also the minimum of the stack
+            self.minStack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.minStack[-1]
 
 # Your MinStack object will be instantiated and called as such:
 # obj = MinStack()
