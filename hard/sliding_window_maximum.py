@@ -1,6 +1,8 @@
-# 239. Sliding Window Maximum (Neetcode 150) Important
+# 239. Sliding Window Maximum 
+# (Neetcode 150) Important
 
-# You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+# You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. 
+# You can only see the k numbers in the window. Each time the sliding window moves right by one position.
 
 # Return the max sliding window.
 
@@ -18,6 +20,7 @@
 #  1  3  -1 [-3  5  3] 6  7       5
 #  1  3  -1  -3 [5  3  6] 7       6
 #  1  3  -1  -3  5 [3  6  7]      7
+
 # Example 2:
 
 # Input: nums = [1], k = 1
@@ -34,7 +37,7 @@
 
 from typing import List
 
-# Time Complexity: O(n*k) (if k=n, O(n^2)), Space Complexity: O(n)
+# Time Complexity: O(n*k) (if k=n, O(n^2)), Space Complexity: O(k) since the subarray we create is of size k
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         l = 0
@@ -46,79 +49,136 @@ class Solution:
             r+=1
         return res
     
-# Efficent Solution: Using Deque (Monotonic Queue)
+# Efficent Solution: Using Deque (Monotonic Decreasing Queue)
 
-## Time Complexity: O(n), Space Complexity: O(n)
+# Time Complexity: O(n), Space Complexity: O(K) since the queue can have a maximum of K values in it
 
+from typing import List
 from collections import deque
+
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        l = r = 0
-        q = deque() # indexes
+        q = deque()  # stores indices, maintained in decreasing order of values (front=max, back=min)
         output = []
-
-        while r<len(nums):
-            # pop smaller values from q
-            while q and nums[r]>nums[q[-1]]:
-                q.pop()
-            q.append(r)
-
-            # if left value is out of bounds, remove the left val from window
-            if l>q[0]:
+        
+        for i in range(len(nums)):
+            # step 1: remove indices from front that are out of current window [i-k+1, i]
+            while q and q[0] <= i-k:
                 q.popleft()
-
-            if (r+1)>=k:
-                output.append(nums[q[0]])
-                l+=1
-            r+=1
+                
+            # step 2: remove indices from back whose values are smaller than nums[i]
+            # no point keeping them since nums[i] is larger and will stay in window longer
+            while q and nums[i] > nums[q[-1]]:
+                q.pop()
+                
+            # step 3: push current index to back
+            q.append(i)
+            
+            # step 4: once we have processed at least k elements, front of deque is always the max
+            if i >= k-1:
+                output.append(nums[q[0]])  # q[0] = front = index of maximum value
 
         return output
+
+sol = Solution()
+ans = sol.maxSlidingWindow(nums=[1,3,-1,-3,5,3,6,7], k=3)
+print(ans)  # [3,3,5,5,6,7]
     
-# Explanation:
-# You need two separate checks because, on each slide of the window, these two events—“we’ve just gathered enough elements to start reporting a max” and “the old max has slid off the left edge so we must evict it”—don’t always happen at exactly the same time. If you collapse them into one if (r+1)>=k: … popleft() … you end up popping your deque even when the index at the front is still in the window.
+# Detailed Dry Run
+# nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+# window valid from i = k-1 = 2 onwards
 
-# Walk-through on [1,3,-1,-3,5,...], k=3
+# i=0, nums[0]=1
 
-# r=0 (window size 1)
-# q building: [0]
-# (r+1)>=k? 1>=3 → False, so no output, no pop, no l++.
+# step 1: q empty → skip
+# step 2: q empty → skip
+# step 3: q.append(0) → q = [0]
+# step 4: i=0 < k-1=2 → skip
 
-# r=1 (window size 2)
-# q: you pop smaller than 3 so q → [1]
-# (r+1)>=k? 2>=3 → False again.
+# q = [0]  (values: [1])
+# output = []
 
-# r=2 (window size 3, now big enough to report)
-# q: append index 2 → q = [1,2]
+# i=1, nums[1]=3
 
-# Correct code:
+# step 1: q[0]=0, 0 <= 1-3=-2? → No → skip
+# step 2: nums[1]=3 > nums[q[-1]]=nums[0]=1? → Yes → pop 0
+#         q = []
+#         q empty → stop
+# step 3: q.append(1) → q = [1]
+# step 4: i=1 < k-1=2 → skip
 
-# if l > q[0]:       # 0 > 1 ? no → don’t pop
-#     q.popleft()
+# q = [1]  (values: [3])
+# output = []
 
-# if (r+1) >= k:     # 3 >= 3 ? yes → output nums[q[0]] == nums[1] == 3; l+=1
-#     output.append(3)
-#     l = 1
-# q stays [1,2].
+# i=2, nums[2]=-1
 
-# Collapsed code would do:
+# step 1: q[0]=1, 1 <= 2-3=-1? → No → skip
+# step 2: nums[2]=-1 > nums[q[-1]]=nums[1]=3? → No → skip
+# step 3: q.append(2) → q = [1, 2]
+# step 4: i=2 >= k-1=2 → output.append(nums[q[0]])=nums[1]=3
 
-# if (r+1)>=k:      # 3>=3 → yes
-#     output.append(nums[q[0]])  # 3
-#     q.popleft()                # WRONG: pops 1 although 1 is still in the window [0..2]
-#     l += 1                     # l=1
-# Now q becomes [2] even though index 1 (the max) is still in the legal window [1..2].
+# q = [1, 2]  (values: [3, -1])
+# output = [3]
+# window = [1, 3, -1] → max=3 ✅
 
-# r=3 (window is now [1..3])
+# i=3, nums[3]=-3
 
-# Correct deque after step r=2 was [1,2], so at r=3—before pop—you’d compare window [3,-1,-3] and pop index 1 only if l > q[0] (1 > 1? no). You still see 3 at q[0] and report 3 again.
+# step 1: q[0]=1, 1 <= 3-3=0? → No → skip
+# step 2: nums[3]=-3 > nums[q[-1]]=nums[2]=-1? → No → skip
+# step 3: q.append(3) → q = [1, 2, 3]
+# step 4: i=3 >= 2 → output.append(nums[q[0]])=nums[1]=3
 
-# With the collapsed version, you lost that 1 prematurely, so your max becomes nums[2] == -1, which is wrong.
+# q = [1, 2, 3]  (values: [3, -1, -3])
+# output = [3, 3]
+# window = [3, -1, -3] → max=3 ✅
 
-# The takeaway
-# Eviction (if l > q[0]: q.popleft()) must only happen when the left pointer has actually moved past the index at the front of your deque.
+# i=4, nums[4]=5
 
-# Output (if r+1 >= k:) must happen exactly when the window first reaches size k and on every slide thereafter.
+# step 1: q[0]=1, 1 <= 4-3=1? → Yes → popleft → q = [2, 3]
+#         q[0]=2, 2 <= 1? → No → stop
+# step 2: nums[4]=5 > nums[q[-1]]=nums[3]=-3? → Yes → pop 3 → q = [2]
+#         nums[4]=5 > nums[q[-1]]=nums[2]=-1? → Yes → pop 2 → q = []
+#         q empty → stop
+# step 3: q.append(4) → q = [4]
+# step 4: i=4 >= 2 → output.append(nums[q[0]])=nums[4]=5
 
-# They can coincide sometimes, but not always—so you need two separate if statements.
+# q = [4]  (values: [5])
+# output = [3, 3, 5]
+# window = [-1, -3, 5] → max=5 ✅
 
-# Keeping them apart guarantees you only ever drop an index once it truly falls out of the window, while still printing your max exactly once per slide.
+# i=5, nums[5]=3
+
+# step 1: q[0]=4, 4 <= 5-3=2? → No → skip
+# step 2: nums[5]=3 > nums[q[-1]]=nums[4]=5? → No → skip
+# step 3: q.append(5) → q = [4, 5]
+# step 4: i=5 >= 2 → output.append(nums[q[0]])=nums[4]=5
+
+# q = [4, 5]  (values: [5, 3])
+# output = [3, 3, 5, 5]
+# window = [-3, 5, 3] → max=5 ✅
+
+# i=6, nums[6]=6
+
+# step 1: q[0]=4, 4 <= 6-3=3? → No → skip
+# step 2: nums[6]=6 > nums[q[-1]]=nums[5]=3? → Yes → pop 5 → q = [4]
+#         nums[6]=6 > nums[q[-1]]=nums[4]=5? → Yes → pop 4 → q = []
+#         q empty → stop
+# step 3: q.append(6) → q = [6]
+# step 4: i=6 >= 2 → output.append(nums[q[0]])=nums[6]=6
+
+# q = [6]  (values: [6])
+# output = [3, 3, 5, 5, 6]
+# window = [5, 3, 6] → max=6 ✅
+
+# i=7, nums[7]=7
+
+# step 1: q[0]=6, 6 <= 7-3=4? → No → skip
+# step 2: nums[7]=7 > nums[q[-1]]=nums[6]=6? → Yes → pop 6 → q = []
+#         q empty → stop
+# step 3: q.append(7) → q = [7]
+# step 4: i=7 >= 2 → output.append(nums[q[0]])=nums[7]=7
+
+# q = [7]  (values: [7])
+# output = [3, 3, 5, 5, 6, 7]
+# window = [3, 6, 7] → max=7 ✅
+# return [3, 3, 5, 5, 6, 7] ✅
