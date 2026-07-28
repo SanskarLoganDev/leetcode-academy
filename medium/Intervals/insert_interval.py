@@ -38,16 +38,26 @@ class Solution:
     def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
         i = 0
         while i<len(intervals):
-            if intervals[i][1]<newInterval[0]:
+            # Case (a): newInterval starts strictly after the current interval ends.
+            # Example: intervals[i] = [1,2], newInterval = [4,8] -> 4 > 2
+            if newInterval[0] > intervals[i][1]:
                 i+=1
                 continue
-            if intervals[i][0]>newInterval[1]:
+            # Case (b): newInterval ends strictly before the current interval starts.
+            # Example: intervals[i] = [6,9], newInterval = [2,5] -> 5 < 6
+            if newInterval[1] < intervals[i][0]:
                 intervals.insert(i, newInterval) # insert at the correct position, O(N)
                 return intervals
+            
+            # Case (c): otherwise, newInterval and intervals[i] must overlap
+            # (neither "completely past" nor "completely before" was true).
+            # Merge them into one bigger interval: take the earliest start and the latest end between the two.
+            # Example: intervals[i] = [3,5], newInterval = [4,8], merged -> [min(3,4), max(5,8)] = [3,8]
             else:
                 newInterval = [min(intervals[i][0], newInterval[0]), max(intervals[i][1], newInterval[1])]
+                # Remove intervals[i] from the list since it's now been absorbed
                 intervals.pop(i) # O(N) # we dont increment i here as we have removed the current interval
-        intervals.append(newInterval)
+        intervals.append(newInterval) # after every remaining interval -- so it belongs at the very end.
         return intervals
     
 # Optimal Approach
@@ -60,18 +70,19 @@ class Solution:
         i = 0
         res = []
         while i<len(intervals):
-            if intervals[i][1]<newInterval[0]:
+            if newInterval[0] > intervals[i][1]:
                 res.append(intervals[i])
                 i+=1
                 continue
-            if intervals[i][0]>newInterval[1]:
-                break  # we can break here as the remaining intervals will also be after newInterval. We cant append in res here we would also need to append all remaining intervals in the original list
+            if newInterval[1] < intervals[i][0]:
+                break  # we can break here as the remaining intervals will also be after newInterval. 
+                       # We cant append in res here we would also need to append all remaining intervals in the original list
             else:
                 newInterval = [min(intervals[i][0], newInterval[0]), max(intervals[i][1], newInterval[1])]
-                i+=1
-        res.append(newInterval)
+                i+=1 # last solution we were popping so i automatically moved
+        res.append(newInterval) # handles edge case of adding at the end, in this case the if below will be skipped
         if i<len(intervals): # better to have this check outside of the loop as we need to optimize.
-            res.extend(intervals[i:]) # append the remaining intervals. A simple for loop can also be used here.
+            res.extend(intervals[i:]) # append the remaining intervals. A simple for loop can also be used here. Or res = res+(intervals[i:])
         return res
 
 
