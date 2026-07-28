@@ -32,9 +32,10 @@
 from typing import List
 
 # Time complexity: O(n * max(piles)), where n is the number of piles and max(piles) is the maximum number of bananas in a pile.
+# Space complexity: O(1)
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
-        def hours(k):
+        def hours(k): # # function to calculate the number of hours required to eat all bananas at speed k
             count = 0
             for bananas in piles:
                 if bananas%k == 0:
@@ -43,16 +44,17 @@ class Solution:
                     count = count + (bananas//k) + 1
             return count
                 
-        for k in range(1, max(piles)+1):
+        for k in range(1, max(piles)+1): # we have max(pile) + 1 because we need to consider that koko might have to eat maximum number of bananas in a pile
             count_hours = hours(k)
             if count_hours<=h:
                 return k
             
 # Time complexity: O(n log(max(piles))), where n is the number of piles and max(piles) is the maximum number of bananas in a pile.
+# Space complexity: O(1)
 class Solution:
     
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
-        def hours(k): # function to calculate the number of hours required to eat all bananas at speed k
+        def hours(k): # function to calculate the number of hours required to eat all bananas at speed k (O(n))
             count = 0
             for bananas in piles:
                 if bananas%k == 0:
@@ -64,12 +66,12 @@ class Solution:
         l = 1
         r = max(piles)
         res = r
-        while l<=r:
+        while l<=r: # O(log(max(piles)))
             mid_k = (l+r)//2
             count_hours = hours(mid_k)
             if count_hours>h:
-                l = mid_k+1
-            elif count_hours<=h:
+                l = mid_k+1 # Koko should eat more bananas as she could not complete all bananas within the target hours
+            elif count_hours<=h: # Koko can comfortable eat the bananas under h hours at k per hour rate, so we try reducing the rate
                 res = min(res, mid_k) # if we find a valid k, we update the result
                 r = mid_k-1
         return res

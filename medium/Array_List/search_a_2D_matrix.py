@@ -58,7 +58,7 @@ class Solution:
                 top = mid_row+1
             elif target<matrix[mid_row][0]: #If target is less than the first element of the mid_row, then we need to search in the upper rows
                 bot = mid_row-1
-            else:
+            else: # target row is located
                 break
         if not top<=bot:
             return False
@@ -74,3 +74,9 @@ class Solution:
             else:
                 l = mid+1
         return False
+    
+# Uncerstanding the target_row calculation
+# Iteration 1: mid_row = (0+2)//2 = 1 → row 1 is [10,11,16,20]
+# target=16 > matrix[1][-1]=20? No
+# target=16 < matrix[1][0]=10? No
+# → else: break — but top and bot are still 0 and 2, unchanged!

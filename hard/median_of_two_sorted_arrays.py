@@ -29,15 +29,17 @@
 from typing import List
 
 # Time complexity: O((n+m)log(n+m)), space complexity: O(n+m)
-class Solution:
+class Solution(object):
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        nums = nums1+nums2
+        if len(nums1)==0 and len(nums2) == 0:
+            return 0
+        nums = nums1 + nums2
         nums.sort()
-        n = len(nums)
-        if n%2==0:
-            return (nums[(n//2)-1]+nums[n//2])/2
+        l = len(nums)
+        if l%2==1:
+            return float(nums[l//2])
         else:
-            return nums[n//2]
+            return (nums[l//2]+nums[(l//2)-1])/2
        
 # Time complexity: O(n+m), space complexity: O(n+m)
 class Solution:

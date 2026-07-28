@@ -65,8 +65,66 @@ class Solution:
         r = len(nums)-1
         while l<r: # here we use < instead of <= to avoid infinite loop as we are doing r = mid in the else condition
             mid = (l+r)//2
-            if nums[mid]>nums[r]:
+            if nums[mid]>nums[r]: # break in ascending order found, therefore move right
                 l=mid+1
             else:
                 r = mid # here we do not do mid-1 because we want to include mid in the next iteration as mid could be the minimum element
         return nums[r]
+    
+    
+# The core idea
+
+# A rotated sorted array has exactly one "breakpoint" — the spot where a smaller number suddenly follows a bigger one. That breakpoint is where the minimum lives. 
+# Everything is otherwise sorted in two ascending chunks.
+
+# The trick: at any mid, compare nums[mid] to nums[r] (the right edge, not the left edge — this matters).
+
+# If nums[mid] > nums[r]: the minimum can't be at or before mid, because if it were, the array from mid to r would have to be sorted ascending (no rotation point in that range) — but it's not, since nums[mid] > nums[r] proves a rotation point exists somewhere between mid and r. So the min is strictly to the right of mid → l = mid + 1.
+# If nums[mid] <= nums[r]: the segment from mid to r is sorted ascending (no breakpoint in this range) — so the minimum is either mid itself or somewhere to its left. Since mid could still be the answer, we don't exclude it → r = mid (not mid - 1).
+
+# The loop ends when l == r — that's the minimum.
+
+# Dry run: nums = [4,5,6,7,0,1,2]
+
+# Indices: 0:4, 1:5, 2:6, 3:7, 4:0, 5:1, 6:2
+
+# Start: l=0, r=6
+
+# Iteration 1:
+
+# mid = (0+6)//2 = 3 → nums[3] = 7
+# Compare nums[mid]=7 vs nums[r]=2: 7 > 2 → minimum is to the right of mid
+# l = mid+1 = 4
+
+# State: l=4, r=6
+
+# Iteration 2:
+
+# mid = (4+6)//2 = 5 → nums[5] = 1
+# Compare nums[mid]=1 vs nums[r]=2: 1 <= 2 → segment mid..r is sorted, min is at mid or to its left
+# r = mid = 5
+
+# State: l=4, r=5
+
+# Iteration 3:
+
+# mid = (4+5)//2 = 4 → nums[4] = 0
+# Compare nums[mid]=0 vs nums[r]=1: 0 <= 1 → min is at mid or to its left
+# r = mid = 4
+
+# State: l=4, r=4 → loop ends (l == r)
+
+# Return nums[4] = 0 ✅ correct.
+
+# Why r = mid and not r = mid - 1
+
+# This is the detail that trips people up. Compare to standard binary search where you'd do r = mid - 1 when you've ruled out mid. 
+# Here, we haven't ruled out mid — it's still a live candidate for being the minimum itself (since the condition nums[mid] <= nums[r] doesn't tell us mid isn't the min, just that the true min is somewhere in [l, mid]). 
+# So we keep mid in the search range by setting r = mid instead of excluding it.
+
+# Meanwhile, in the other branch, nums[mid] > nums[r] does definitively rule out mid as the minimum (since something smaller — nums[r] — exists to its right), so it's safe to fully exclude it with l = mid + 1.
+
+# Why compare against nums[r] and not nums[l]
+
+# If you compared against nums[l] instead, you couldn't always tell which half contains the rotation point — e.g. nums[mid] > nums[l] is true both when mid is in the "still ascending from l" region and sometimes even across the rotation. 
+# Comparing to nums[r] avoids this ambiguity: nums[mid] > nums[r] unambiguously means the breakpoint is between mid and r.

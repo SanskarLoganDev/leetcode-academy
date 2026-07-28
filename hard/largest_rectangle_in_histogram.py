@@ -95,7 +95,7 @@ print(ans)
 # Formula: R - L - 1 = 4 - 1 - 1 = 2
 
 # Same complexities
-
+# Best solution
 # If we want to avoid the flush loop:
 class Solution:
     def largestRectangleArea(self, heights: List[int]) -> int:
