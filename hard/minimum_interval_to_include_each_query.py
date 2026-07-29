@@ -62,7 +62,7 @@ import heapq
 # space complexity: O(n + q) for heap and result array
 class Solution:
     def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
-        res = [0 for _ in range(len(queries))] # to store the result for each query, here we could not use map as map wont inlcude duplicate queries
+        res = [0]*len(queries) # to store the result for each query, here we could not use map as map wont inlcude duplicate queries
         intervals.sort() # sort intervals based on start time, we sort both intervals and queries so they can be processed in order. O(n log n)
         q_with_idx = [] # to store queries along with their original indices
         for i in range(len(queries)): # populate the q_with_idx list
@@ -108,3 +108,84 @@ class Solution:
 # It does not restart from i = 0 for each query.
 
 # So you do at most n heappush calls total, not m * n.
+
+
+# The core idea
+
+# Brute force checks every interval for every query — O(n·q). To speed this up, we want to only look at intervals that are actually relevant to a query, and among those, quickly find the smallest one.
+
+# Key insight: Process queries in sorted order (smallest to largest). As the query value grows, we only ever need to add intervals whose left <= q — we never need to "un-add" an interval just because a query grew (since a bigger q could still fall inside an interval that started way earlier). We use a min-heap keyed by interval size so we can instantly grab the smallest valid interval for the current query.
+
+# But intervals added to the heap might have already expired (i.e., right < q) by the time we get to a later, bigger query — so before reading the top of the heap, we pop off anything whose right < q (it can never satisfy this or any future query, since queries only grow).
+
+# Why sort queries but track original index?
+
+# The problem wants answers in the original query order, but we need to process them in sorted order for the sweep to work. So we pair each query with its original index (q_with_idx), sort by query value, compute answers, and write each answer back into res[idx] at its original position.
+
+# Detailed dry run: intervals = [[1,4],[2,4],[3,6],[4,4]], queries = [2,3,4,5]
+
+# Setup:
+
+# intervals.sort() → [[1,4],[2,4],[3,6],[4,4]]   (sorted by left, ties by right)
+# q_with_idx = [(2,0),(3,1),(4,2),(5,3)]
+# q_with_idx.sort() → [(2,0),(3,1),(4,2),(5,3)]  (already sorted, coincidentally)
+# min_heap = []
+# i = 0
+# res = [0,0,0,0]
+
+# Query (q=2, idx=0):
+
+# Add phase: check intervals[i][0] <= 2
+
+# i=0: intervals[0]=[1,4], 1<=2 → push (size=4-1+1=4, right=4) → heap: [(4,4)] → i=1
+# i=1: intervals[1]=[2,4], 2<=2 → push (size=4-2+1=3, right=4) → heap: [(3,4),(4,4)] → i=2
+# i=2: intervals[2]=[3,6], 3<=2? No → stop adding
+
+# Expire phase: check heap top's right < q=2
+
+# Top is (3,4) (heap keeps smallest size at top) → right=4 < 2? No → nothing expires
+
+# Answer: heap non-empty, top = (3,4) → res[0] = 3 ✅ matches expected (query 2 → answer 3)
+
+# Query (q=3, idx=1):
+
+# Add phase: intervals[i][0] <= 3, i still at 2
+
+# i=2: intervals[2]=[3,6], 3<=3 → push (size=6-3+1=4, right=6) → heap: [(3,4),(4,4),(4,6)] → i=3
+# i=3: intervals[3]=[4,4], 4<=3? No → stop adding
+
+# Expire phase: top = (3,4) → right=4 < 3? No → nothing expires
+
+# Answer: top = (3,4) → res[1] = 3 ✅ matches expected (query 3 → answer 3)
+
+# Query (q=4, idx=2):
+
+# Add phase: intervals[i][0] <= 4, i still at 3
+
+# i=3: intervals[3]=[4,4], 4<=4 → push (size=4-4+1=1, right=4) → heap now has (1,4) at top (smallest size) → i=4
+# i=4: i == len(intervals) → stop (no more intervals)
+
+# Expire phase: top = (1,4) → right=4 < 4? No → nothing expires
+
+# Answer: top = (1,4) → res[2] = 1 ✅ matches expected (query 4 → answer 1)
+
+# Query (q=5, idx=3):
+
+# Add phase: i=4 == len(intervals) → nothing to add
+
+# Expire phase — this is where popping actually happens:
+
+# Top = (1,4) (the [4,4] interval) → right=4 < 5? Yes → pop it. Heap now has [(3,4),(4,4),(4,6)] reorganized, top becomes (3,4) (the [2,4] interval)
+# Check again: top = (3,4) → right=4 < 5? Yes → pop it too. Heap now top = (4,4) (the [1,4] interval)
+# Check again: top = (4,4) → right=4 < 5? Yes → pop it too. Heap now top = (4,6) (the [3,6] interval)
+# Check again: top = (4,6) → right=6 < 5? No → stop popping
+
+# Answer: top = (4,6) → res[3] = 4 ✅ matches expected (query 5 → answer 4, from interval [3,6])
+
+# Final result: res = [3,3,1,4] ✅ matches the expected output exactly.
+
+# Why the min-heap holds (size, right) and not (size, left)
+
+# We need right specifically to check expiry (right < q) — since queries only increase, an interval is "dead" once its right edge falls below the current query. 
+# We don't need left in the heap at all after pushing, since the add phase already guaranteed left <= q at the time of insertion, and once added, 
+# left never becomes relevant again for future (larger) queries — it can only get more satisfied, never less, on the left side.
