@@ -78,7 +78,7 @@ class KthLargest:
         self.heap = []
         # Process each number in the initial list by calling add. (for k=3, the heap will not have more than 3 elements)
         for num in nums:
-            self.add(num)
+            self.add(num) # using the add method below
 
     def add(self, val: int) -> int:
         # If the heap has fewer than k elements, add the new value.
