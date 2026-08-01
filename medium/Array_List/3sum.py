@@ -30,6 +30,20 @@
 # 3 <= nums.length <= 3000
 # -105 <= nums[i] <= 105
 
+# Brute force:
+# Time complexity: O(N^3), we do not consider time complexity of sorted or type casting as it is a fixed size of 3 (3log3)
+# Space complexity: O(N) for set
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        hashset = set()
+        for i in range(len(nums)):
+            for j in range(i+1, len(nums)):
+                for k in range(j+1, len(nums)):
+                    if nums[i]+nums[j]+nums[k]==0:
+                        triplet = tuple(sorted([nums[i], nums[j], nums[k]]))
+                        hashset.add(triplet)
+        return list(hashset)
+
 # # Time Complexity: O(n^2)  (O(n log n) for sorting + O(n^2) for the two-pointer approach)
 # # Space Complexity: O(1)
 

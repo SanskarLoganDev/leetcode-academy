@@ -166,3 +166,27 @@ class Solution(object):
                     box_set.add(board[row_index][col_index])
         
         return True
+    
+# Solution using 1 set and string form, Time complexity: (N^2) and space complexity: O(N^2)
+
+class Solution:
+
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        string_set = set()
+
+        for row in range(9):
+            for col in range(9):
+                if board[row][col]=='.':
+                    continue
+
+                string_row = f"{board[row][col]} found in row {row}"
+                string_col = f"{board[row][col]} found in column {col}"
+                string_box = f"{board[row][col]} found in box {row//3},{col//3}"
+
+                if string_row in string_set or string_col in string_set or string_box in string_set:
+                    return False
+                string_set.add(string_row)
+                string_set.add(string_col)
+                string_set.add(string_box)
+
+        return True
