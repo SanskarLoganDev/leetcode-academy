@@ -30,7 +30,7 @@
 class Solution:
     def climbStairs(self, n: int) -> int:
         def solve(n):
-            if n<0: # when the steps go below 0 that means we have corssed the top
+            if n<0: # when the steps go below 0 that means we have crossed the top
                 return 0
 
             if n==0: # when there are no steps left to climb that means we are at the top and this counts as a successful way
