@@ -41,7 +41,8 @@
 # tasks[i] is an uppercase English letter.
 # 0 <= n <= 100
 
-
+# time complexity: O(N) where N is the len(tasks)
+# Space complexity: O(1), nowhere we store more than a  max of 26 characters
 from typing import List
 
 import heapq
@@ -58,8 +59,8 @@ class Solution:
                 max_heap.append(i)
         max_heap = [-num for num in max_heap] # converting to max heap by negating the values
         heapq.heapify(max_heap)
-        print(max_heap)
-        while max_heap:
+
+        while max_heap:  
             temp = []
             i = 1
             while i<=n+1 and max_heap:
@@ -77,11 +78,30 @@ class Solution:
 
         return time
 
+# Explanation of last logic here:
+# So len(temp) = "how many genuinely busy intervals happened in this round" — a 0 in there doesn't mean "nothing happened," it means "a task ran and that was its last instance."
+
+# Now the two branches, side by side
+
+# if max_heap: (heap still has work left after this round)
+# This means there's more scheduling to do later. Whatever tasks got run this round (even the ones now at 0) had
+# other, different tasks running alongside them in this round's slots — and even if this round didn't fill all n+1
+# slots with real tasks, the CPU still must occupy a full n+1-wide block before the next round can safely begin
+# (that's the cooldown constraint). So we charge time += n+1 regardless of how many of those slots were genuinely
+# busy vs. idle — the round costs n+1 no matter what, because more work is still queued after it.
+
+# else: (heap is now empty — this was the final round)
+# Since nothing is left to schedule afterward, there's no need to protect any future cooldown — you don't need to
+# pad this round out to a full n+1 width with idle time nobody needs. 
+# The round's true cost is exactly however many real task-executions happened, which is precisely len(temp). 
+# If 3 tasks ran in this final round, that's 3 busy intervals and 0 wasted idle time tacked onto the end.
+
+
 # Explanation with example:
     
 # Start
 
-# Heap: {A6, B2, C1, D1}
+# Heap: {A: 6, B: 2, C: 1, D: 1}, n=1
 # time = 0
 
 # Cycle 1 (up to 2 slots)
@@ -151,3 +171,72 @@ class Solution:
 # This matches the well-known formula:
 # Let f_max = 6 (count of most frequent task A) and m = 1 (number of tasks with that max count).
 # Answer = max(len(tasks), (f_max-1)*(n+1) + m) = max(10, (6-1)*2 + 1) = max(10, 11) = 11.
+
+# Same time and space complexity, just using greedy without heap
+import heapq
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        counts = [0]*26
+        for task in tasks:
+            counts[ord(task) - ord('A')]+=1
+        counts.sort()
+        # for tasks = ["A","A","A","B","B","B"], n = 2
+        max_freq = counts[-1]
+        no_pits = max_freq - 1  # 3-1 = 2
+        idlespots = n*no_pits   # A _ _ A _ _ A, here idlespots = 4 = 2*2
+        # starting with the 2nd largest element therefore index 24
+        for i in range(24, -1, -1):
+            idlespots = idlespots - min(counts[i], no_pits)
+        
+        if idlespots>0:
+            return len(tasks) + idlespots
+        return len(tasks)
+
+# Code walkthrough
+# example (tasks = ["A","A","A","A","B","B","B","B","C","C","C","D","D","E"], n=2) 
+# has exactly the edge cases we want: a tie for max frequency (A and B both at 4), 
+# a filler that overflows the available pits
+
+# Step 1 — Build counts
+
+# Walk through all 14 tasks, incrementing counts[ord(task)-ord('A')]. 
+# Before sorting, the relevant (non-zero) entries are:
+
+# counts[0] (A) = 4, counts[1] (B) = 4, counts[2] (C) = 3, counts[3] (D) = 2, counts[4] (E) = 1
+
+# All other 21 letters stay 0.
+
+# Step 2 — Sort counts
+
+# counts.sort() arranges all 26 values ascending. 
+# The 21 zeros settle at the front (indices 0–20), then the real frequencies fill in ascending order at the back:
+
+# counts[21] = 1 (E)
+# counts[22] = 2 (D)
+# counts[23] = 3 (C)
+# counts[24] = 4 (either A or B — whichever Python's sort happens to place there; doesn't matter, value is what counts)
+# counts[25] = 4 (the other of A/B)
+
+# Step 3 — Compute the frame
+
+# max_freq = counts[-1] = 4
+# no_pits = max_freq - 1 = 3 — this is how many gaps exist between four instances of the busiest task: X _ _ _ X _ _ _ X _ _ _ X
+# idlespots = n * no_pits = 2 * 3 = 6 — total idle slots in that frame (3 gaps, each n=2 wide)
+
+# Step 4 — Loop from i=24 down to i=0, subtracting fillers
+
+# This walks every other entry (everything except the single largest at index 25), from second-largest down to the smallest, using each to soak up idle slots — capped at no_pits per task, since a task can occupy at most one slot per gap.
+
+# i=24: counts[24] = 4 — this is the tied max-frequency task (say B). Even though B is just as frequent as A, it can still only fill min(4, no_pits=3) = 3 idle slots (one per gap; its 4th instance can't fit in the frame and must trail afterward). idlespots = 6 - 3 = 3
+
+# i=23: counts[23] = 3 (C). min(3, 3) = 3. C fills all 3 remaining idle slots exactly. idlespots = 3 - 3 = 0
+
+# i=22: counts[22] = 2 (D). min(2, 3) = 2, but idlespots is already 0 — subtracting still works arithmetically: idlespots = 0 - 2 = -2. Note: this pushes idlespots negative, since there was nothing left to fill.
+
+# i=21: counts[21] = 1 (E). min(1, 3) = 1. idlespots = -2 - 1 = -3
+
+# i=20 down to i=0: all zeros. min(0, 3) = 0 each time — no change. idlespots stays -3.
+
+# Step 5 — Final check
+
+# idlespots = -3, which is not > 0, so the code takes the return len(tasks) branch → returns 14.
