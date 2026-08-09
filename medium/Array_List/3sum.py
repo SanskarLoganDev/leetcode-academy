@@ -44,6 +44,29 @@ class Solution:
                         hashset.add(triplet)
         return list(hashset)
 
+# Using 2 sum solution
+# time complexity: O(n^2)
+# Space complexity: O(n)
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        nums.sort()
+        result_set = set()  # stores distinct triplets to avoid duplicates
+        
+        for i in range(n):
+            seen = set()  # tracks numbers seen so far in the inner loop
+            target = -nums[i]  # we need two numbers from the rest that sum to this
+            
+            for j in range(i + 1, n):
+                complement = target - nums[j]
+                if complement in seen:
+                    # found a valid triplet: nums[i], nums[j], complement
+                    triplet = tuple([nums[i], nums[j], complement])
+                    result_set.add(triplet)
+                seen.add(nums[j])
+        
+        return [list(t) for t in result_set]
+
 # # Time Complexity: O(n^2)  (O(n log n) for sorting + O(n^2) for the two-pointer approach)
 # # Space Complexity: O(1)
 
@@ -54,7 +77,7 @@ class Solution:
         nums.sort()
         for i in range(len(nums)):
             if nums[i]>0: # if the first element is greater than 0, then no triplet can sum to 0
-                break 
+                break  # you can also return here as the future solutions will start with a positive solution too
             if i>0 and nums[i]==nums[i-1]: # to skip duplicates
                 # if the current element is same as the previous element, then we skip it
                 continue
