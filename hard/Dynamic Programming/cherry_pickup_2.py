@@ -15,7 +15,6 @@
 # Both robots should reach the bottom row in grid.
 
 # Example 1:
-
 # Input: grid = [[3,1,1],[2,5,1],[1,5,5],[2,1,1]]
 # Output: 24
 # Explanation: Path of robot #1 and #2 are described in color green and blue respectively.
