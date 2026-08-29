@@ -1,10 +1,9 @@
 # 1768. Merge Strings Alternately
+# Neetcode 250
 
 # You are given two strings word1 and word2. Merge the strings by adding letters in alternating order, starting with word1. If a string is longer than the other, append the additional letters onto the end of the merged string.
 
 # Return the merged string.
-
- 
 
 # Example 1:
 
@@ -31,19 +30,28 @@
 # word2:    p   q 
 # merged: a p b q c   d
 
-def mergeAlternatively(word1, word2):
-    l = min(len(word1), len(word2))
-    res = ""
-    for i in range(l):
-        res+=word1[i]+word2[i]
-    if len(word1)>len(word2):
-        res+=word1[len(word2):len(word1)]
-    if len(word2)>len(word1):
-        res+=word2[len(word1):len(word2)]
-    return res
+# Solution using string slicing
+# Time complexity: O(N+M)
+# Space complexity: O(Max(N,M)) due to slicing of the remaining strings
+class Solution:
+    def mergeAlternately(self, word1: str, word2: str) -> str:
+        i = 0
+        j = 0
+        res = ""
+        while i<len(word1) and j<len(word2):
+            res+=word1[i]+word2[j]
+            i+=1
+            j+=1
+        if i<len(word1):
+            res+=word1[i:]
+        if j<len(word2):
+            res+=word2[j:]
 
-print(mergeAlternatively(word1 = "abcd", word2 = "pq"))
+        return res
 
+# For performance, consider using a list to join characters at the end, avoiding repeated string copies in Python.
+# Time complexity: O(N+M)
+# Space complexity: O(N+M)
 def mergeAlternatively2(word1, word2):
     result=[]
     i=0
