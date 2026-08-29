@@ -1,4 +1,5 @@
-# 344. REVERSE STRING
+# 344. Reverse String
+# Neetcode 250
 
 # Write a function that reverses a string. The input string is given as an array of characters s.
 
@@ -41,3 +42,17 @@ print(reverseString(s = ["h","e","l","l","o","x"]))
 # s[left] = chr(ord(s[left]) + ord(s[right]))
 # s[right] = chr(ord(s[left]) - ord(s[right]))
 # s[left] = chr(ord(s[left]) - ord(s[right]))
+
+from typing import List
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        l = 0
+        r = len(s)-1
+        while l<=r:
+            s[l], s[r] = s[r], s[l]
+            l+=1
+            r-=1
+        
