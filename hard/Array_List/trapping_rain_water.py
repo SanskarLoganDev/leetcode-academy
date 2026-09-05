@@ -1,4 +1,5 @@
 # 42. Trapping Rain Water
+# Neetcode 150
 
 # Topics: # Array, Two Pointers, Stack, # Dynamic Programming, Monotonic Stack
 
@@ -43,14 +44,47 @@ class Solution:
                 total+=vol
         return total
     
-# Same code but optimized by comparing adjacent heights. Time: O(N), Space: O(N)
+# Same code but optimized by comparing adjacent heights. 
+
+# Approach when not including the current index in left max and right max calculations
+# Time complexity: O(N), Space complexity: O(N)
 from typing import List
 
 class Solution:
-    def trapRain(self, height: List[int]) -> int:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        left_max = [0]*n
+        right_max = [0]*n
+        total = 0
+        # in the below loop we do not include 0 index as water will fall off of it anyways
+        for i in range(1, n): # maximum value to the left of the current index
+            left_max[i] = max(left_max[i-1], height[i-1])
+
+        # in the below loop we do not include n-1 index as water will fall off of it anyways
+        for i in range(n-2, -1, -1): # maximum value to the right of the current index
+            right_max[i] = max(right_max[i+1], height[i+1])
+
+        for i in range(1, n-1): # water will fall off of the end indexes
+            vol = min(left_max[i], right_max[i]) - height[i]
+            if vol>0:
+                total+=vol
+        
+        return total
+                
+
+sol = Solution()
+ans = sol.trapRain([0,1,0,2,1,0,1,3,2,1,2,1]) # [4,2,0,3,2,5]
+print(ans)
+
+# Approach including the current index in left max and right max calculations
+# Time complexity: O(N), Space complexity: O(N)
+class Solution:
+    def trap(self, height: List[int]) -> int:
         n = len(height)
         max_left = [0]*n 
         max_right = [0]*n
+        max_left[0] = height[0]
+        max_right[-1] = height[n-1]
         total = 0
         for i in range(1, n):
             max_left[i] = max(max_left[i-1], height[i])
@@ -63,11 +97,111 @@ class Solution:
             if vol>0:
                 total+=vol
         return total
-                
 
-sol = Solution()
-ans = sol.trapRain([0,1,0,2,1,0,1,3,2,1,2,1]) # [4,2,0,3,2,5]
-print(ans)
+# Two Pointers Approach (Optimised approach)
+# Time Complexity: O(n) - We traverse the height array once to calculate the trapped water.
+# Space Complexity: O(1) - We use two pointers to keep track of the left and right walls, so we don't need any additional space.
+
+# Explanation:# We use two pointers, one starting from the left and one from the right.
+# We keep track of the maximum height seen so far from both sides.
+
+# Approach including the current index in left max and right max calculations
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        l,r = 0, n-1
+        left_max, right_max = height[l], height[r] # on the initial and last indexes there would be no trapped water therefore it does not matter
+        total = 0
+        while l<r: # l<r because we already do l+=1 or r-=1 in the if and else statements before processing
+            if left_max<right_max: 
+                l+=1
+                # current height is included in the max_left
+                left_max = max(left_max, height[l])
+                vol = min(left_max, right_max) - height[l]
+                if vol>0:
+                    total+=vol
+            else:
+                r-=1
+                # current height is included in the max_right
+                right_max = max(right_max, height[r])
+                vol = min(left_max, right_max) - height[r]
+                if vol>0:
+                    total+= vol
+        return total
+    
+# Approach when not including the current height in left max and right max calculations
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        if n < 3:
+            return 0
+        l = 1
+        r = n-2
+        max_left = height[0]
+        max_right = height[n-1]
+        total = 0
+        while l<=r: # l<=r because we do l+=1 or r-=1 at the end and we do not want a central value to be skipped
+            if max_left < max_right:
+                # current height not included in max_left
+                vol = min(max_left, max_right) - height[l]
+                if vol>0:
+                    total+=vol
+                max_left = max(max_left, height[l]) # now current height is used
+                l+=1
+      
+            else:
+                # current height not included in max_right
+                vol = min(max_left, max_right) - height[r]
+                if vol>0:
+                    total+=vol
+                max_right = max(max_right, height[r]) # now current height is used
+                r-=1
+
+        return total
+
+# in the 2 pointers approach or the left_max & right_max array approach, you can either include or exclude the current index in the left_max and right_max calculation
+# as it wont affect the result in any way
+# Example where current bar IS the maximum
+
+# Take:
+
+# height = [1, 5, 2]
+
+# At i = 1, current height is 5.
+
+# Version 1:
+
+# left max excluding current = 1
+# right max excluding current = 2
+
+# min(1,2) - 5 = -4
+# => no water
+
+# Version 2:
+
+# max_left[1] = 5
+# max_right[1] = 5
+
+# min(5,5) - 5 = 0
+
+# Still no water.
+
+# So including the current bar changes the intermediate maximums, but not the final trapped water.
+
+# Why mathematically both are valid
+
+# Water at index i cannot be negative:
+
+# water = max(0, min(left boundary, right boundary) - height[i])
+
+# If height[i] is taller than one of the true surrounding boundaries, then version 1 gives a negative result, which you ignore.
+
+# Version 2 instead lets height[i] become the maximum itself, which makes:
+
+# min(...) - height[i] = 0
+
+# So both end up adding 0.
+
 
 # Dynamic Programming Approach
 # Time Complexity: O(n) - We traverse the height array once to calculate the trapped water.
@@ -90,52 +224,4 @@ class Solution:
             vol = min(max_left[i],max_right[i])-height[i]
             if vol>0:
                 total+=vol
-        return total
-
-# Two Pointers Approach
-# Time Complexity: O(n) - We traverse the height array once to calculate the trapped water.
-# Space Complexity: O(1) - We use two pointers to keep track of the left and right walls, so we don't need any additional space.
-
-# Explanation:# We use two pointers, one starting from the left and one from the right.
-# We keep track of the maximum height seen so far from both sides.
-
-class Solution:
-    def trap(self, height: List[int]) -> int:
-        n = len(height)
-        l,r = 0, n-1
-        left_max, right_max = height[l], height[r] # on the initial and last indexes there would be no trapped water therefore it does not matter
-        res = 0
-        while l<r:
-            if left_max<right_max:
-                l+=1
-                left_max = max(left_max, height[l]) # if height is max here, the next line vol = 0 as it would be height[l]-height[l]
-                if left_max - height[l]>0:
-                    res+= left_max - height[l] # we could use here min(left_max, right_max) - height[l] and answer would be same as shown in the solution below
-            else:
-                r-=1
-                right_max = max(right_max, height[r])
-                if right_max - height[r]>0:
-                    res+= right_max - height[r]
-        return res
-
-# Using the original formula for this problem
-class Solution:
-    def trap(self, height: List[int]) -> int:
-        n = len(height)
-        l,r = 0, n-1
-        left_max, right_max = height[l], height[r]
-        total = 0
-        while l<r:
-            if left_max<right_max:
-                l+=1
-                left_max = max(left_max, height[l])
-                vol = min(left_max, right_max) - height[l]
-                if vol>0:
-                    total+=vol
-            else:
-                r-=1
-                right_max = max(right_max, height[r])
-                vol = min(left_max, right_max) - height[r]
-                if vol>0:
-                    total+= vol
         return total
