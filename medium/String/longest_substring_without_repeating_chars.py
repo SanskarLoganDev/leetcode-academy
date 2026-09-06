@@ -66,3 +66,41 @@ class Solution:
         
         return max_len
         
+# Edge case example to understand the use of char_index[s[i]] >= start condition:
+# s = "ccbbcc"
+# What would happen without >= start?
+
+# Suppose you wrote:
+
+# if s[i] in char_index:
+#     start = char_index[s[i]] + 1
+
+# At i = 4:
+
+# char_index["c"] = 1
+
+# You would incorrectly do:
+
+# start = 1 + 1 = 2
+
+# But start was already:
+
+# 3
+
+# So you just moved your left pointer backwards:
+
+# 3 → 2 ❌
+
+# Now your window could contain duplicates again, breaking the sliding-window invariant.
+
+# Rule to remember
+
+# A previously seen character matters only if its previous occurrence is still inside the current window:
+
+# char_index[s[i]] >= start
+
+# If:
+
+# previous index < start
+
+# that occurrence has already been excluded from the window, so ignore it.
