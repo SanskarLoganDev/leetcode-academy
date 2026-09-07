@@ -9,11 +9,13 @@
 # Input: s = "abcabcbb"
 # Output: 3
 # Explanation: The answer is "abc", with the length of 3.
+
 # Example 2:
 
 # Input: s = "bbbbb"
 # Output: 1
 # Explanation: The answer is "b", with the length of 1.
+
 # Example 3:
 
 # Input: s = "pwwkew"
@@ -47,7 +49,7 @@ print(sol.lengthOfLongestSubstring("pwwkew"))    # 3
 
 
 # Optimised solution
-# Time complexity: O(N), space complexity: O(N)
+# Time complexity: O(N), space complexity: O(26) since there are 26 max alphabets that the hashmap will be storing
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         char_index = {} # dictionary {"element": "its index in s"}
