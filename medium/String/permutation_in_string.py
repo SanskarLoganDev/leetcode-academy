@@ -10,6 +10,7 @@
 # Input: s1 = "ab", s2 = "eidbaooo"
 # Output: true
 # Explanation: s2 contains one permutation of s1 ("ba").
+
 # Example 2:
 
 # Input: s1 = "ab", s2 = "eidboaoo"
@@ -85,18 +86,18 @@ class Solution:
             return True
 
         # 3) Slide the window over s2
+        l=0
         for i in range(m, n):
             # add new right char
             count2[s2[i]] = count2.get(s2[i], 0) + 1
 
             # remove old left char
-            ch_out = s2[i - m]
-            count2[ch_out] -= 1
-            if count2[ch_out] == 0:
-                del count2[ch_out]
+            count2[s2[l]]-=1
+            if count2[s2[l]] == 0:
+                del count2[s2[l]]
 
             # 4) compare maps after each shift
             if count1 == count2:
                 return True
-
+            l+=1 # move the left side of window
         return False
