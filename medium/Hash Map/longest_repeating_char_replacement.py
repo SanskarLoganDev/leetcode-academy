@@ -10,6 +10,7 @@
 # Input: s = "ABAB", k = 2
 # Output: 4
 # Explanation: Replace the two 'A's with two 'B's or vice versa.
+
 # Example 2:
 
 # Input: s = "AABABBA", k = 1
@@ -56,22 +57,22 @@ print(ans)
 
 class Solution:
     def longestRepeat(self, s: str, k: int) -> int:
-        if len(s)==0:
-            return 0
+        # if len(s)==0: # not really needed
+        #     return 0
         max_len = 0
         counter = {}
         l = 0
         max_f = 0
         for i in range(len(s)):
             counter[s[i]] = counter.get(s[i], 0)+1 # increment the count of the character at index i
-            max_f = max(max_f, counter[s[i]])
+            max_f = max(max_f, counter[s[i]]) # here we compare only the value being added to window as its the only one whose count changes and has a chance of becoming the new maximum frequency
             len_substr = i-l+1
             convertable_chars = len_substr - max_f
             if convertable_chars<=k:
                 max_len = max(max_len, len_substr)
             else: # move the left pointer when convertable chars are more than k
                 counter[s[l]]-=1 # decrement the count of the character at index l (leftmost in the window)
-                l+=1
+                l+=1 # moving the left side of window forward
                 max_f = max(counter.values()) # this check can be removed for further optimization
                 # as the reduction would decrease the max_f, but we are looking for longer valid substr which would increase
                 # the length of substr and thus increase the convertable chars and lead to more invalid cases anyway.
