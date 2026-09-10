@@ -49,7 +49,7 @@ class Solution:
             r+=1
         return res
     
-# Efficent Solution: Using Deque (Monotonic Decreasing Queue)
+# Efficent Solution: Using Deque (Monotonic Decreasing Queue), because we need to have maximum value on the left for easy access and popping out of window values
 
 # Time Complexity: O(n), Space Complexity: O(K) since the queue can have a maximum of K values in it
 
@@ -58,7 +58,7 @@ from collections import deque
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        q = deque()  # stores indices, maintained in decreasing order of values (front=max, back=min)
+        q = deque()  # stores indices, maintained in decreasing order of values (front\left=max, back\right=min)
         output = []
         
         for i in range(len(nums)):
@@ -72,7 +72,7 @@ class Solution:
                 q.pop()
                 
             # step 3: push current index to back
-            q.append(i)
+            q.append(i) # append before you insert the max in the output array
             
             # step 4: once we have processed at least k elements, front of deque is always the max
             if i >= k-1:
