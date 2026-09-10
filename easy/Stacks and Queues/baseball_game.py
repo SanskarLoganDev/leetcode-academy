@@ -1,4 +1,5 @@
-# 682. BASEBALL GAME
+# 682. Baseball Game
+# Neetcode 250
 
 # You are keeping the scores for a baseball game with strange rules. At the beginning of the game, you start with an empty record.
 
@@ -16,8 +17,6 @@
 
 # The test cases are generated such that the answer and all intermediate calculations fit in a 32-bit integer and that all operations are valid.
 
- 
-
 # Example 1:
 
 # Input: ops = ["5","2","C","D","+"]
@@ -29,6 +28,7 @@
 # "D" - Add 2 * 5 = 10 to the record, record is now [5, 10].
 # "+" - Add 5 + 10 = 15 to the record, record is now [5, 10, 15].
 # The total sum is 5 + 10 + 15 = 30.
+
 # Example 2:
 
 # Input: ops = ["5","-2","4","C","D","9","+","+"]
@@ -43,6 +43,7 @@
 # "+" - Add -4 + 9 = 5 to the record, record is now [5, -2, -4, 9, 5].
 # "+" - Add 9 + 5 = 14 to the record, record is now [5, -2, -4, 9, 5, 14].
 # The total sum is 5 + -2 + -4 + 9 + 5 + 14 = 27.
+
 # Example 3:
 
 # Input: ops = ["1","C"]
@@ -53,29 +54,21 @@
 # Since the record is empty, the total sum is 0.
 
 from collections import deque
-
-def baseballGame(operations):
-    dq = deque()
-    sum = 0
-    for i in range(len(operations)):
-        if operations[i]=="C":
-            sum-=dq[-1]
-            dq.pop()
-            
-        elif operations[i]=="D":
-            sum+=dq[-1]*2
-            dq.append(dq[-1]*2)
-            
-        elif operations[i]=="+":
-            sum+=dq[-1]+dq[-2]
-            dq.append(dq[-1]+dq[-2])
-            
-        else:
-            sum+=int(operations[i])
-            dq.append(int(operations[i]))
-            
-    return sum
-print(baseballGame(["1","C"]))
+from typing import List
+class Solution:
+    def calPoints(self, operations: List[str]) -> int:
+        runs = []
+        n = len(operations)
+        for i in range(n):
+            if operations[i] == "C":
+                runs.pop()
+            elif operations[i] == "D":
+                runs.append(runs[-1]*2)
+            elif operations[i] == "+":
+                runs.append(runs[-1]+runs[-2])
+            else:
+                runs.append(int(operations[i]))
+        return sum(runs)
 
 def baseballGame1(operations):
     dq = deque()
