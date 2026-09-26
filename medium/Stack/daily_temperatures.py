@@ -1,4 +1,5 @@
-# 739. Daily Temperatures (Neetcode 150) Important
+# 739. Daily Temperatures 
+# (Neetcode 150) Important
 
 # Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.
 
@@ -23,7 +24,7 @@
 
 from typing import List
 
-# Time Complexity: O(n^2), space Complexity: O(n)
+# Time Complexity: O(n^2), space Complexity: O(n), O(1) if we exclude the result array
 # My Solution: Brute Force
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
@@ -42,9 +43,31 @@ class Solution:
             else:
                 res.append(count)
         return res
-    
+
+# Another brute force way 
+# Time Complexity: O(n^2), space Complexity: O(n), O(1) auxiliary space if we exclude the result array
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = []
+        for i in range(len(temperatures)):
+            temp = temperatures[i]
+            count = 0
+            greater = False
+            for j in range(i+1, len(temperatures)):
+                count+=1
+                if temperatures[j] > temp:
+                    greater = True
+                    break
+            if greater:
+                res.append(count)
+            else:
+                res.append(0)
+        
+        return res
+
+
 # Optimized Solution: Using Stack (Monotonic Stack)
-# Time Complexity: O(n), Space Complexity: O(n)
+# Time Complexity: O(n), Space Complexity: O(n) for the stack
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
         res = [0]*len(temperatures)
