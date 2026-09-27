@@ -1,10 +1,5 @@
 -- 175. Combine Two Tables
--- Easy
--- Topics
--- conpanies icon
--- Companies
--- SQL Schema
--- Pandas Schema
+
 -- Table: Person
 
 -- +-------------+---------+
