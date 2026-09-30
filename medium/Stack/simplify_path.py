@@ -1,4 +1,5 @@
-# 71. Simplify Path Important
+# 71. Simplify Path 
+# Important
 # Neetcode 250
 
 # You are given an absolute path for a Unix-style file system, which always begins with a slash '/'. Your task is to transform this absolute path into its simplified canonical path.
