@@ -1,22 +1,21 @@
-# 84. Largest Rectangle in Histogram Hard
+# 84. Largest Rectangle in Histogram
 # Neetcode 150 (Important)
 
 # Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram. 
 
 # Example 1:
 
-
 # Input: heights = [2,1,5,6,2,3]
 # Output: 10
 # Explanation: The above is a histogram where width of each bar is 1.
 # The largest rectangle is shown in the red area, which has an area = 10 units.
+
 # Example 2:
 
 
 # Input: heights = [2,4]
 # Output: 4
  
-
 # Constraints:
 
 # 1 <= heights.length <= 105
@@ -25,20 +24,19 @@
 from typing import List
 
 # Brute force solution:
-# time complexity: O(N^3) due to 2 for loops and min calculation, spece complexity: O(N)
+# time complexity: O(N^2) due to 2 for loops, space complexity: O(N)
 
 from typing import List
 
 class Solution:
-
-    def largestRectArea(self, heights: List[int]) -> int:
-        n = len(heights)
+    def largestRectangleArea(self, heights: List[int]) -> int:
         max_area = 0
-        for i in range(n): # O(N)
-            for j in range(i+1, n+1): # O(N)
-                min_height = min(heights[i:j]) # O(N)
-                area = min_height*(j-i)
-                max_area = max(max_area, area)
+        for i in range(len(heights)):
+            minh = heights[i]
+            for j in range(i, len(heights)):
+                minh = min(heights[j], minh)
+                width = j-i+1
+                max_area = max(max_area, minh*width)
         return max_area
 
 sol = Solution()
@@ -51,38 +49,41 @@ print(ans)
 # and in stack we push and pop each element at most once.
 # Space complexity: O(n), for the stack that stores indices of the heights.
 
-from typing import List
-
+# Best solution
+# Video link: https://www.youtube.com/watch?v=OQJjh6AT00g
+# If we want to avoid the flush loop:
 class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        maxArea = 0
+        stack = [] # will hold the index and not the height
+        heights = heights + [0]   # append sentinel becuase we start the loop if we see a lower height on the right, 
+        # a 0 to the right will calculate areas considering the remaining values in the stack
+        # original: [2,1,5,6,2,3] → becomes [2,1,5,6,2,3,0]
 
-    def largestRectArea(self, heights: List[int]) -> int:
-        n = len(heights)
-        max_area = 0
-        stack = []
-        for i in range(n):
-            # Pop from stack while the current height is less than the height at the top of the stack
-            while stack and heights[i]<heights[stack[-1]]:
-                # Pop the bar we're finalizing.
-                height = heights[stack.pop()]
-                # # After popping, stack[-1] (if it exists) is the nearest bar to the LEFT that is shorter than `height`
-                width = i - stack[-1] - 1 if stack else i # explanation below (number of positions strictly between the two boundaries)
-                max_area = max(max_area, height*width)
+        for i in range(len(heights)):   # now loops one extra time, i=6
+            while stack and heights[i] < heights[stack[-1]]: # we only check the right less value
+                height = heights[stack.pop()] # The popped bar is treated as the height of the rectangle.
+                width = i - stack[-1] - 1 if stack else i # Explanation below
+                maxArea = max(maxArea, height * width)
             stack.append(i)
-        
-        # Flush pass: whatever's left in the stack has no shorter bar to its right
-        for i in range(len(stack)):
-            height = heights[stack.pop()]
-            # Same width logic as above, but R = n instead of i, since we've run off the end
-            width = n - stack[-1] - 1 if stack else n
-            max_area = max(max_area, height*width)
-        return max_area
 
-sol = Solution()
-ans = sol.largestRectArea(heights = [2,1,5,6,2,3])
+        return maxArea   # no flush loop needed — everything already got popped
 
-print(ans)
+# Understanding: width = i - stack[-1] - 1 if stack else i
+# After popping:
+# - i is the first smaller bar on the RIGHT
+# - stack[-1] is the first smaller bar on the LEFT
+#
+# Therefore the rectangle can extend from:
+# stack[-1] + 1  to  i - 1
+#
+# Width = (i - 1) - (stack[-1] + 1) + 1
+#       = i - stack[-1] - 1
+#
+# If the stack is empty, there is no smaller bar on the left,
+# so the rectangle extends all the way back to index 0.
 
-# Understanding width formula:
+# Understanding width formula with example:
 # Say you have index positions: 0, 1, 2, 3, 4, 5
 
 # If L = 1 and R = 4 are your two boundary markers, how many positions are strictly between them (not including L or R themselves)?
@@ -93,26 +94,6 @@ print(ans)
 # Positions between: 2 and 3 → that's 2 positions.
 
 # Formula: R - L - 1 = 4 - 1 - 1 = 2
-
-# Same complexities
-# Best solution
-# If we want to avoid the flush loop:
-class Solution:
-    def largestRectangleArea(self, heights: List[int]) -> int:
-        maxArea = 0
-        stack = []
-        heights = heights + [0]   # append sentinel
-        # original: [2,1,5,6,2,3] → becomes [2,1,5,6,2,3,0]
-
-        for i in range(len(heights)):   # now loops one extra time, i=6
-            while stack and heights[i] < heights[stack[-1]]:
-                height = heights[stack.pop()]
-                width = i - stack[-1] - 1 if stack else i
-                maxArea = max(maxArea, height * width)
-            stack.append(i)
-
-        return maxArea   # no flush loop needed — everything already got popped
-            
 
 # Neetcode solution with same complexities, here the stack structure is complex to understand and in the previous solutions the width forumla is complex to understand
 class Solution:
