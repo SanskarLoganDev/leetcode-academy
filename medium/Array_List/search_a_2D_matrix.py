@@ -1,4 +1,6 @@
-# 74. Search a 2D Matrix (NEETCODE 150) Important
+# 74. Search a 2D Matrix 
+# (NEETCODE 150) Important
+# Neetcode 250
 
 # You are given an m x n integer matrix matrix with the following two properties:
 
@@ -10,11 +12,10 @@
 
 # Example 1:
 
-
 # Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3
 # Output: true
-# Example 2:
 
+# Example 2:
 
 # Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13
 # Output: false
@@ -29,7 +30,8 @@
 
 from typing import List
 
-# time complexity O(m log n) (due to binary search in each row), space complexity O(1)
+# time complexity O(m log n) (due to binary search in each row)
+# space complexity O(1)
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         for row in matrix:
@@ -46,7 +48,8 @@ class Solution:
         return False
     
     
- # Time complexity O(log(m * n)) due to binary search to find the the target row and the target element in that row, space complexity O(1)   
+ # Time complexity O(log(m * n)) due to binary search to find the the target row and the target element in that row
+ # space complexity O(1)   
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
 
@@ -58,9 +61,10 @@ class Solution:
                 top = mid_row+1
             elif target<matrix[mid_row][0]: #If target is less than the first element of the mid_row, then we need to search in the upper rows
                 bot = mid_row-1
-            else: # target row is located
+            else: # target row is located and does none of the above statements are triggered
                 break
-        if not top<=bot:
+            
+        if not top<=bot: # early exit
             return False
 
         target_row = matrix[(top+bot)//2] # This is the row where the target could be present, since it is between the first and last elements of this row
