@@ -1,4 +1,5 @@
-# 875. Koko Eating Bananas (Neetcode 150) Important
+# 875. Koko Eating Bananas 
+# (Neetcode 150) Important
 
 # Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
 
@@ -13,10 +14,12 @@
 
 # Input: piles = [3,6,7,11], h = 8
 # Output: 4
+
 # Example 2:
 
 # Input: piles = [30,11,23,4,20], h = 5
 # Output: 30
+
 # Example 3:
 
 # Input: piles = [30,11,23,4,20], h = 6
@@ -35,7 +38,7 @@ from typing import List
 # Space complexity: O(1)
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
-        def hours(k): # # function to calculate the number of hours required to eat all bananas at speed k
+        def hours(k): # # function to calculate the number of hours required to eat all bananas at speed k: O(N)
             count = 0
             for bananas in piles:
                 if bananas%k == 0:
@@ -46,7 +49,7 @@ class Solution:
                 
         for k in range(1, max(piles)+1): # we have max(pile) + 1 because we need to consider that koko might have to eat maximum number of bananas in a pile
             count_hours = hours(k)
-            if count_hours<=h:
+            if count_hours<=h: # k is being checked in increasing order so the first valid k will be the minimum, and thats why we return sooner
                 return k
             
 # Time complexity: O(n log(max(piles))), where n is the number of piles and max(piles) is the maximum number of bananas in a pile.
@@ -63,6 +66,7 @@ class Solution:
                     count = count + (bananas//k) + 1
             return count
         # considering the minimum speed as 1 and maximum speed as max(piles) [range of k]
+        # here k is in increasing order so we are able to apply binary search here
         l = 1
         r = max(piles)
         res = r
