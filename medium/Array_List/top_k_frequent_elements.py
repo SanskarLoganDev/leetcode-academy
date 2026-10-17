@@ -129,8 +129,9 @@ class Solution:
 # (Space complexity is also O(n), for the count map and the bucket list.)
 
 
-# Heap solution, first thing comes to mind when key words like 'Top K' elements appear
+# Solution using max heap
 
+# Heap solution, first thing comes to mind when key words like 'Top K' elements appear
 # time complexity = O(N + M + KlogM) = O(N + KlogN), worst case  is large: O(N + NlogN) or O(NlogN)
 import heapq
 class Solution:
@@ -147,3 +148,19 @@ class Solution:
             res.append(heapq.heappop(heap)[1])
 
         return res
+
+# Same solution but using min heap
+import heapq
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        heap = []
+        count = {}
+        for n in nums:
+            count[n] = count.get(n, 0)+1
+
+        for n, v in count.items():
+            heapq.heappush(heap, (v, n))
+            if len(heap)>k:
+                heapq.heappop(heap)
+
+        return [y for x, y in heap]
