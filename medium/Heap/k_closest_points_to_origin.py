@@ -28,7 +28,7 @@ from typing import List
 import heapq
 
 # time complexity: O(N + Klog N) where N is the number of points
-# space complexity: O(N) for the heap
+# space complexity: O(N) for the min heap
 class Solution:
     def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
         if len(points)==1: # not an edge case, just for making it faster
@@ -44,4 +44,22 @@ class Solution:
             res.append(point)
             k-=1
         return res
-        
+
+# Solution using Max heap to reduce space complexity
+# time complexity: O(N + Klog N) where N is the number of points
+# space complexity: O(K) for the max heap as it will only store k values
+import heapq
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        dist = [] # max-heap of distance from origin
+        res = [] 
+        for x, y in points:
+            heapq.heappush(dist, (-(x**2 + y**2), x, y))
+            if len(dist)>k: # popping if the length becomes greater than k
+                heapq.heappop(dist) # since the values are -ve, the maximum values are being popped so only the minimum k values will remain in the heap
+
+        while dist:
+            d, x, y = dist.pop()
+            res.append([x, y])
+
+        return res
