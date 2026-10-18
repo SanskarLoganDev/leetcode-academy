@@ -27,6 +27,27 @@
  
 # Follow up: Can you come up with an algorithm that runs in O(n log(n)) time complexity?
 
+# Brute force recursion
+# time complexity: O(2^N)
+# space complexity: O(N) of recursion call-stack/depth
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        max_count = 0
+        n = len(nums)
+        def solve(i, prev):
+            if i>=n:
+                return 0
+
+            # take
+            take = 0
+            if nums[i]>prev:
+                take = 1+solve(i+1, nums[i])
+            # skip
+            skip = solve(i+1, prev)
+            return max(take, skip)
+        return solve(0, float("-inf"))
+                
 # Using memoization we get memory time exceeded error for large test cases on leetcode because of large state space taken my memo dictionary. 
 # Adding to python dictionary is expensive operation.
 # time complexity O(N^2) and 
@@ -59,7 +80,7 @@ class Solution:
 
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        memo = {}
+        memo = {} # (i_prev, prev) -> int
         n = len(nums)
 
         def solve(i, prev_i):
@@ -127,6 +148,35 @@ class Solution:
                 res[idx] = nums[i] # replace the number at idx with nums[i]
         return len(res) # length of res is the length of longest increasing subsequence
                 
+# Summary of dry run:
+# Entire process summarized
+# nums[i]     res after processing nums[i]
+
+# 10          [10]
+
+# 9           [9]
+#             replace 10 with 9
+
+# 2           [2]
+#             replace 9 with 2
+
+# 5           [2, 5]
+#             append
+
+# 3           [2, 3]
+#             replace 5 with 3
+
+# 7           [2, 3, 7]
+#             append
+
+# 101         [2, 3, 7, 101]
+#             append
+
+# 18          [2, 3, 7, 18]
+#             replace 101 with 18
+
+
+
 # patience sorting using inbuilt bisect module for binary search
 
 import bisect
@@ -141,3 +191,94 @@ class Solution:
             else:
                 res[idx] = x
         return len(res)
+
+# detailed dry run for understanding:
+
+# nums = [10, 9, 2, 5, 3, 7, 101, 18]
+# res = []
+
+# i=0, nums[i]=10
+# res=[] -> append 10
+# res=[10]
+# Smallest ending value for subsequence length 1 is 10
+
+# i=1, nums[i]=9
+# res=[10], x=9
+# Find leftmost index where res[index]>=9
+# l=0, r=0, idx=inf
+# mid=0, res[0]=10 >= 9 -> idx=0, r=-1
+# Search ends -> replace res[0]=9
+# res=[9]
+# 9 is better than 10 because it is a smaller ending value for a length-1 subsequence
+
+# i=2, nums[i]=2
+# res=[9], x=2
+# l=0, r=0, idx=inf
+# mid=0, res[0]=9 >= 2 -> idx=0, r=-1
+# Search ends -> replace res[0]=2
+# res=[2]
+# 2 is a better ending value than 9 for a length-1 subsequence
+
+# i=3, nums[i]=5
+# res=[2], x=5
+# l=0, r=0, idx=inf
+# mid=0, res[0]=2 < 5 -> l=1
+# Search ends, idx=inf -> no value >=5
+# append 5
+# res=[2,5]
+# LIS length increases to 2: 2 -> 5
+
+# i=4, nums[i]=3
+# res=[2,5], x=3
+# Find leftmost value >=3
+# l=0, r=1, idx=inf
+# mid=0, res[0]=2 < 3 -> l=1
+# mid=1, res[1]=5 >= 3 -> idx=1, r=0
+# Search ends -> replace res[1]=3
+# res=[2,3]
+# LIS length is still 2, but 2->3 is better than 2->5 because 3 is a smaller ending value
+# Example: if 4 appears later, 2->3->4 works but 2->5->4 does not
+
+# i=5, nums[i]=7
+# res=[2,3], x=7
+# l=0, r=1, idx=inf
+# mid=0, res[0]=2 < 7 -> l=1
+# mid=1, res[1]=3 < 7 -> l=2
+# Search ends, idx=inf -> append 7
+# res=[2,3,7]
+# LIS length increases to 3: 2 -> 3 -> 7
+
+# i=6, nums[i]=101
+# res=[2,3,7], x=101
+# l=0, r=2, idx=inf
+# mid=1, res[1]=3 < 101 -> l=2
+# mid=2, res[2]=7 < 101 -> l=3
+# Search ends, idx=inf -> append 101
+# res=[2,3,7,101]
+# LIS length increases to 4: 2 -> 3 -> 7 -> 101
+
+# i=7, nums[i]=18
+# res=[2,3,7,101], x=18
+# Find leftmost value >=18
+# l=0, r=3, idx=inf
+# mid=1, res[1]=3 < 18 -> l=2
+# mid=2, res[2]=7 < 18 -> l=3
+# mid=3, res[3]=101 >= 18 -> idx=3, r=2
+# Search ends -> replace res[3]=18
+# res=[2,3,7,18]
+# LIS length is still 4, but 18 is a better ending value than 101
+# Example: if 20 appears later, 2->3->7->18->20 works, but 2->3->7->101->20 does not
+
+# Summary:
+# 10  -> [10]          append
+# 9   -> [9]           replace 10
+# 2   -> [2]           replace 9
+# 5   -> [2,5]         append
+# 3   -> [2,3]         replace 5
+# 7   -> [2,3,7]       append
+# 101 -> [2,3,7,101]   append
+# 18  -> [2,3,7,18]    replace 101
+
+# Final:
+# res=[2,3,7,18]
+# len(res)=4
