@@ -88,7 +88,7 @@ class Solution:
                 return solve(i+1, j+1)
 
             # insert
-            insert = 1+solve(i, j+1)
+            insert = 1+solve(i, j+1) # in insert we do not move i as the matching element was inserted before i, and now the ith element needs to be matched again
             # delete
             delete = 1+solve(i+1, j)
             # replace
@@ -98,4 +98,118 @@ class Solution:
             return memo[key]
         return solve(0, 0)
             
+            
+# Same solution and complexities but in reverse considering lengths of string instead of index
+# Easier approach to prepare the bottom up solution next (bottom up from the start of table)
+
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        n1 = len(word1)
+        n2 = len(word2)
+        memo = {}
+        def solve(m, n):
+            if n==0:
+                return m
+            if m==0:
+                return n
+            
+            key = (m, n)
+            if key in memo:
+                return memo[key]
+
+            if word1[m-1]==word2[n-1]:
+                return solve(m-1, n-1)
+
+            # insert
+            insert = 1+solve(m, n-1)
+
+            # delete
+            delete = 1+solve(m-1, n)
+
+            # replace
+            replace = 1+solve(m-1, n-1)
+
+            memo[key] = min(insert, delete, replace)
+            return memo[key]
+        return solve(n1, n2)
+
+# Bottom up DP
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        n1 = len(word1)
+        n2 = len(word2)
+        dp = [[0]*(n2+1) for _ in range(n1+1)] # the condition when i==0 or j==0
+        # dp[i][j] = min operations for making s1 of length i and s2 of length j equal
+        for i in range(n1+1):
+            for j in range(n2+1):
+                if i==0 or j==0:
+                    dp[i][j] = i+j
+
+                elif word1[i-1]==word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+
+                else:
+                    # insert
+                    insert = 1+dp[i][j-1]
+
+                    # delete
+                    delete = 1+dp[i-1][j]
+
+                    # replace
+                    replace = 1+dp[i-1][j-1]
+                    dp[i][j] = min(insert, delete, replace)
+
+        return dp[n1][n2]
+
+            
+# Bottom up DP with reduced space complexity: O(min(n1, n2))
+
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        # make word2 the shorter string
+        if len(word2) > len(word1):
+            word1, word2 = word2, word1
+
+        n1 = len(word1)
+        n2 = len(word2)
+
+        # Base row:
+        # empty word1 -> prefixes of word2
+        dp = [0] * (n2 + 1)
+
+        for j in range(n2 + 1):
+            dp[j] = j
+
+        for i in range(1, n1 + 1):
+
+            # old dp[0], which is the diagonal for j=1
+            prev = dp[0]
+
+            # converting word1[:i] -> empty string
+            dp[0] = i
+
+            for j in range(1, n2 + 1):
+
+                # save old dp[j] before overwriting it
+                temp = dp[j]
+
+                if word1[i - 1] == word2[j - 1]:
+                    dp[j] = prev
+
+                else:
+                    # dp[j-1] = LEFT = current row
+                    insert = 1 + dp[j - 1]
+
+                    # dp[j] = TOP = previous row
+                    delete = 1 + dp[j]
+
+                    # prev = DIAGONAL = previous row, previous column
+                    replace = 1 + prev
+
+                    dp[j] = min(insert, delete, replace)
+
+                # old TOP becomes diagonal for next j
+                prev = temp
+
+        return dp[n2]
         
