@@ -59,7 +59,7 @@ class MyCircularDeque:
     def insertFront(self, value: int) -> bool:
         if self.isFull():
             return False
-        self.front = (self.front - 1 + self.k)%self.k
+        self.front = (self.front - 1 + self.k)%self.k # make sure the front index is moved before inserting the value and points at the newly inserted value
         self.arr[self.front] = value       
         self.size+=1
         return True
@@ -67,7 +67,7 @@ class MyCircularDeque:
     def insertLast(self, value: int) -> bool:
         if self.isFull():
             return False
-        self.rear = (self.rear + 1)%self.k
+        self.rear = (self.rear + 1)%self.k # make sure the rear index is moved before inserting the value and points at the newly inserted value
         self.arr[self.rear] = value
         self.size+=1
         return True
@@ -75,7 +75,7 @@ class MyCircularDeque:
     def deleteFront(self) -> bool:
         if self.isEmpty():
             return False
-        self.arr[self.front] = -1
+        self.arr[self.front] = -1 # in case of delete, just assign the current index as -1 and then move the index
         self.front = (self.front + 1)%self.k
         self.size-=1
         return True
