@@ -15,8 +15,6 @@
 # boolean isFull() Checks whether the circular queue is full or not.
 # You must solve the problem without using the built-in queue data structure in your programming language. 
 
- 
-
 # Example 1:
 
 # Input
@@ -44,7 +42,65 @@
 # 0 <= value <= 1000
 # At most 3000 calls will be made to enQueue, deQueue, Front, Rear, isEmpty, and isFull.
 
-# Solution using Array
+# Solution using Array and more intuitive than the one below this solution
+
+# time complexity: O(1) for every function
+
+# Main logic:
+# +1 in array index -> (idx + 1) % size
+# -1 in array index -> (idx -1 + size) % size 
+
+class MyCircularQueue:
+
+    def __init__(self, k: int): # space : O(k)
+        self.k = k
+        self.front = 0
+        self.rear = k-1
+        self.size = 0
+        self.arr = [-1]*k
+
+    def enQueue(self, value: int) -> bool:
+        if self.isFull():
+            return False
+        self.rear = (self.rear + 1)%self.k
+        self.arr[self.rear] = value
+        self.size+=1
+        return True
+
+    def deQueue(self) -> bool:
+        if self.isEmpty():
+            return False
+        self.arr[self.front] = -1
+        self.front = (self.front + 1)%self.k
+        self.size-=1
+        return True
+
+    def Front(self) -> int:
+        if self.isEmpty():
+            return -1
+        return self.arr[self.front]
+
+    def Rear(self) -> int:
+        if self.isEmpty():
+            return -1
+        return self.arr[self.rear]
+
+    def isEmpty(self) -> bool:
+        return self.size == 0
+
+    def isFull(self) -> bool:
+        return self.size == self.k
+
+
+# Your MyCircularQueue object will be instantiated and called as such:
+# obj = MyCircularQueue(k)
+# param_1 = obj.enQueue(value)
+# param_2 = obj.deQueue()
+# param_3 = obj.Front()
+# param_4 = obj.Rear()
+# param_5 = obj.isEmpty()
+# param_6 = obj.isFull()
+
 
 class MyCircularQueue:
 
