@@ -104,3 +104,12 @@ class Solution:
             return idx
         idx = self.binarySearch(nums[start:], target)
         return start+idx if idx!=-1 else -1 # we do this as the index returned will be based on the slice and not the original list
+    
+    
+# If we use a simpler findMin function like below, the time complexity becomes O(N)
+
+def findMin(nums: List[int]):
+    for i in range(1, len(nums)):
+            if nums[i - 1] > nums[i]:
+                return i
+    return 0
